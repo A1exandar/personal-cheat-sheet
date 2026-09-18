@@ -22,12 +22,19 @@ jobs:
         run: hugo --gc --minify
 
       # Uploads the contents of ./public/ to the Hostinger web root via FTP.
-      # Only changed files are transferred on each run. Requires four repo
-      # secrets (Settings -> Secrets and variables -> Actions):
+      # Requires four repo secrets (Settings -> Secrets and variables -> Actions):
       #   FTP_SERVER      - e.g. ftp.yourdomain.com (from hPanel > Files > FTP Accounts)
       #   FTP_USERNAME    - the FTP account username
       #   FTP_PASSWORD    - the FTP account password
       #   FTP_SERVER_DIR  - remote path to publish into, e.g. public_html/
+      #
+      # dangerous-clean-slate: this action's own incremental diffing (based
+      # on a hash-state file it keeps on the server) missed a real content
+      # change once (baseURL-only edits that changed sitemap.xml/index.xml
+      # but not every page's HTML), leaving stale files live. Wiping
+      # server-dir and re-uploading everything each run is slightly slower
+      # but removes that class of bug - the live site always matches
+      # exactly what was just built, with no incremental-sync guesswork.
       - name: Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:
@@ -36,3 +43,4 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           server-dir: ${{ secrets.FTP_SERVER_DIR }}
           local-dir: ./public/
+          dangerous-clean-slate: true
