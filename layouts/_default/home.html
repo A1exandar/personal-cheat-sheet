@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .Title }}</title>
+    <link rel="icon" type="image/png" href="/favicon.png?v=1">
+    <link rel="stylesheet" href="/css/style.css?v=17">
+</head>
+
+<body class="home-page">
+    {{ partial "site-header.html" . }}
+
+    <main class="landing-main">
+        <section class="landing-hero" aria-label="Introduction">
+            <div class="hero-copy">
+                <p class="terminal-prompt hero-prompt" aria-hidden="true">
+                    <span class="prompt-bracket">[</span><span class="prompt-user">aleksandar</span><span class="prompt-at">@</span><span class="prompt-host">thinkpad</span><span class="prompt-bracket">]</span> <span class="prompt-dollar">$</span><span class="prompt-typed">Hello friend</span><span class="prompt-cursor"></span>
+                </p>
+
+                <h1 class="hero-title">Personal<span class="hero-title-accent">Cheat Sheet</span></h1>
+
+                <span class="hero-divider" aria-hidden="true"></span>
+
+                <p class="hero-description">Practical notes, commands and solutions<br>for Linux, infrastructure and automation.</p>
+
+                <div class="social-icons" aria-label="Social profiles">
+                    <a href="https://x.com/A1exandar_" target="_blank" rel="noopener noreferrer" aria-label="X">
+                        <img src="/images/x-social-media-white-icon.webp" alt="X">
+                    </a>
+                    <span class="icon-divider" aria-hidden="true"></span>
+                    <a href="https://www.instagram.com/a1exandar/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                        <img src="/images/ig.png" alt="Instagram">
+                    </a>
+                    <span class="icon-divider" aria-hidden="true"></span>
+                    <a href="https://www.linkedin.com/in/alex-djordjevic/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                        <img src="/images/in.png" alt="LinkedIn">
+                    </a>
+                    <span class="icon-divider" aria-hidden="true"></span>
+                    <a href="https://github.com/A1exandar?tab=repositories" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                        <img src="/images/github-white-icon.webp" alt="GitHub">
+                    </a>
+                    <span class="icon-divider" aria-hidden="true"></span>
+                    <a href="mailto:djordjevic.aleksandar980@gmail.com" aria-label="Email Aleksandar">
+                        <img src="/images/gmail-icon-logo.svg" alt="Gmail">
+                    </a>
+                </div>
+            </div>
+
+            <div class="hero-photo" aria-hidden="true"></div>
+        </section>
+    </main>
+
+    <footer class="hero-status-bar">
+        <span class="hero-status">Ready.<span class="status-cursor" aria-hidden="true"></span></span>
+        {{ partial "mini-prompt.html" . }}
+    </footer>
+</body>
+</html>

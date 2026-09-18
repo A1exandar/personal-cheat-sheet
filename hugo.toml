@@ -1,0 +1,12 @@
+baseURL = 'https://example.org/'
+locale = 'en-us'
+title = 'My New Hugo Project'
+
+[markup]
+  [markup.highlight]
+    # Chroma syntax highlighting for fenced code blocks, Monokai-inspired.
+    # noClasses=true (Hugo's own default) inlines each token's color as a
+    # style attribute rather than emitting CSS classes, so no separate
+    # generated stylesheet is needed.
+    style = 'monokai'
+    noClasses = true

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .Title }} — Personal Cheat Sheet</title>
+    <link rel="icon" type="image/png" href="/favicon.png?v=1">
+    <link rel="stylesheet" href="/css/style.css?v=9">
+</head>
+
+<body>
+    <div class="site">
+        {{ partial "site-header.html" . }}
+
+        <main class="home-main">
+            <section class="post-list" aria-label="Cheat sheets">
+                {{ range .RegularPages.ByDate.Reverse }}
+                <article class="post">
+                    <div class="post-title">
+                        <span class="bullet">•</span>
+                        <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+                    </div>
+                    <div class="post-description">{{ .Description }}</div>
+                    <div class="post-tags">
+                        {{ range $index, $tag := .Params.tags }}
+                            {{ if $index }}, {{ end }}{{ $tag }}
+                        {{ end }}
+                    </div>
+                </article>
+                {{ end }}
+            </section>
+        </main>
+    </div>
+</body>
+</html>

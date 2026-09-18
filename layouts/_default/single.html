@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ .Title }} — Personal Cheat Sheet</title>
+
+    <link rel="icon" type="image/png" href="/favicon.png?v=1">
+    <link rel="stylesheet" href="/css/style.css?v=11">
+</head>
+
+<body>
+
+    <div class="site">
+
+        {{ partial "site-header.html" . }}
+
+        <main class="article-main">
+
+            <article class="sheet-article{{ if eq .RelPermalink "/about/" }} about-article{{ end }}">
+
+                <h1>{{ .Title }}</h1>
+
+                {{ if eq .RelPermalink "/about/" }}
+                    <img class="identity-wordmark about-wordmark" src="/images/a1exandar-logo.svg" alt="A1ex@ndar">
+                    <div class="about-content">
+                        <img class="about-profile" src="/images/aleksandar-profile.png?v=2" alt="Portrait of Aleksandar">
+                        <div class="about-copy">
+                            {{ .Content }}
+                        </div>
+                    </div>
+                    {{ partial "mini-prompt.html" . }}
+                {{ else }}
+                    <p class="article-description">{{ .Description }}</p>
+
+                    {{ .Content }}
+                {{ end }}
+
+            </article>
+
+        </main>
+
+    </div>
+
+</body>
+</html>
