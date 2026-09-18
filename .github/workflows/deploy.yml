@@ -1,0 +1,38 @@
+name: Build and deploy to Hostinger
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: "0.165.0"
+          extended: true
+
+      - name: Build site
+        run: hugo --gc --minify
+
+      # Uploads the contents of ./public/ to the Hostinger web root via FTP.
+      # Only changed files are transferred on each run. Requires four repo
+      # secrets (Settings -> Secrets and variables -> Actions):
+      #   FTP_SERVER      - e.g. ftp.yourdomain.com (from hPanel > Files > FTP Accounts)
+      #   FTP_USERNAME    - the FTP account username
+      #   FTP_PASSWORD    - the FTP account password
+      #   FTP_SERVER_DIR  - remote path to publish into, e.g. public_html/
+      - name: Deploy via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: ${{ secrets.FTP_SERVER_DIR }}
+          local-dir: ./public/
