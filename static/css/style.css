@@ -178,7 +178,12 @@ main {
 }
 
 .hero-photo {
-    background-image: url("/images/home-hero-bg.jpg");
+    /* ?v=2 cache-busts this specific image at the CDN/browser level - the
+       filename never changes when the photo is swapped, and this asset is
+       served with a 7-day Cache-Control, so without a version bump here a
+       previously-cached copy can keep showing after a photo change even
+       past a hard refresh (the CDN edge cache isn't cleared by that). */
+    background-image: url("/images/home-hero-bg.jpg?v=2");
     background-size: cover;
     background-position: center;
 }
