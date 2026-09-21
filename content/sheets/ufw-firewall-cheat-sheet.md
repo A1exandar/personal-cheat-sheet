@@ -14,8 +14,8 @@ UFW (Uncomplicated Firewall) is a front end that generates and manages `iptables
 ## Install
 
 ```bash
-sudo apt update
-sudo apt install ufw
+sudo apt update       # refresh the package index
+sudo apt install ufw  # install UFW itself
 ```
 
 ## Check status and version
@@ -33,13 +33,13 @@ sudo ufw version
 Default SSH port:
 
 ```bash
-sudo ufw allow 22/tcp
+sudo ufw allow 22/tcp   # allow the default SSH port
 ```
 
 Custom SSH port (for example 2222):
 
 ```bash
-sudo ufw allow 2222/tcp
+sudo ufw allow 2222/tcp   # allow SSH on a custom port instead of 22
 ```
 
 Confirm the rule is listed, then continue. If you use a cloud provider, keep a web console or serial console open as a fallback while testing.
@@ -47,8 +47,8 @@ Confirm the rule is listed, then continue. If you use a cloud provider, keep a w
 ## Recommended default policies
 
 ```bash
-sudo ufw default deny incoming
-sudo ufw default allow outgoing
+sudo ufw default deny incoming    # block all inbound traffic unless explicitly allowed
+sudo ufw default allow outgoing   # let the server initiate outbound connections freely
 ```
 
 This blocks all inbound traffic except what you explicitly allow, while letting the server make outbound connections (updates, DNS, package mirrors).
@@ -85,8 +85,8 @@ sudo ufw allow 51820/udp   # e.g. WireGuard
 ## Allow a port range
 
 ```bash
-sudo ufw allow 6000:6007/tcp
-sudo ufw allow 60000:61000/udp
+sudo ufw allow 6000:6007/tcp     # allow a range of TCP ports
+sudo ufw allow 60000:61000/udp   # allow a range of UDP ports
 ```
 
 A protocol (`/tcp` or `/udp`) is required when specifying a range.
@@ -101,7 +101,7 @@ sudo ufw app info "Nginx Full"   # show what a profile opens
 ```
 
 ```bash
-sudo ufw allow OpenSSH
+sudo ufw allow OpenSSH         # opens the port(s) defined by the OpenSSH app profile
 sudo ufw allow "Nginx Full"    # opens 80 and 443, when the nginx package is installed
 ```
 
@@ -130,7 +130,7 @@ sudo ufw deny from 198.51.100.55     # block a host entirely
 Rules are evaluated top to bottom, first match wins, so a `deny from` must sit *above* any broader `allow` for that traffic. Use `insert` to place it:
 
 ```bash
-sudo ufw insert 1 deny from 198.51.100.55
+sudo ufw insert 1 deny from 198.51.100.55   # insert at position 1, ahead of any broader allow
 ```
 
 ## Delete rules
@@ -157,7 +157,7 @@ sudo ufw reload    # re-apply rules, e.g. after editing config files
 UFW manages IPv6 rules too, controlled by `IPV6=yes` in `/etc/default/ufw` (the default on current releases). If IPv6 rules are missing from `ufw status`, check that setting, then:
 
 ```bash
-sudo ufw disable && sudo ufw enable
+sudo ufw disable && sudo ufw enable   # restart UFW so the config change takes effect
 ```
 
 Rules written without an address (`sudo ufw allow 80/tcp`) apply to both IPv4 and IPv6.
@@ -165,22 +165,22 @@ Rules written without an address (`sudo ufw allow 80/tcp`) apply to both IPv4 an
 ## Minimal web server example
 
 ```bash
-sudo ufw allow OpenSSH
-sudo ufw allow 80/tcp
-sudo ufw allow 443/tcp
-sudo ufw default deny incoming
-sudo ufw default allow outgoing
-sudo ufw enable
-sudo ufw status verbose
+sudo ufw allow OpenSSH             # keep SSH access before enabling anything else
+sudo ufw allow 80/tcp               # HTTP
+sudo ufw allow 443/tcp              # HTTPS
+sudo ufw default deny incoming      # block everything else inbound
+sudo ufw default allow outgoing     # allow the server to make outbound connections
+sudo ufw enable                     # turn the firewall on
+sudo ufw status verbose             # confirm the rules took effect
 ```
 
 ## Minimal SSH-only server (custom port)
 
 ```bash
-sudo ufw allow 2222/tcp
-sudo ufw default deny incoming
-sudo ufw default allow outgoing
-sudo ufw enable
+sudo ufw allow 2222/tcp            # allow SSH on the custom port first
+sudo ufw default deny incoming      # block everything else inbound
+sudo ufw default allow outgoing     # allow outbound connections
+sudo ufw enable                     # turn the firewall on
 ```
 
 Make sure `sshd` is actually listening on 2222 (`Port 2222` in `/etc/ssh/sshd_config`, service restarted) before enabling.

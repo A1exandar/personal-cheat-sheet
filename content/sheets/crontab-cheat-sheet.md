@@ -58,8 +58,8 @@ crontab -l -u www-data   # view another user's crontab (needs root)
 | `@hourly` | `0 * * * *` |
 
 ```cron
-@daily   /usr/local/bin/cleanup.sh
-@reboot  /usr/local/bin/warm-cache.sh
+@daily   /usr/local/bin/cleanup.sh      # runs once a day, at midnight
+@reboot  /usr/local/bin/warm-cache.sh   # runs once, right after boot
 ```
 
 ## Common schedules
@@ -98,7 +98,7 @@ crontab -l -u www-data   # view another user's crontab (needs root)
 Cron has no "last day" token. The day-of-month field is fixed, so the usual approach is to run every day and let the script exit unless tomorrow is the 1st:
 
 ```cron
-5 0 28-31 * *  [ "$(date -d tomorrow +\%d)" = "01" ] && /usr/local/bin/month-end.sh
+5 0 28-31 * *  [ "$(date -d tomorrow +\%d)" = "01" ] && /usr/local/bin/month-end.sh   # only actually runs on the month's last day
 ```
 
 Note that `%` must be escaped as `\%` inside a crontab line. Restricting to `28-31` just avoids waking the job early in the month.
@@ -124,7 +124,7 @@ For anything more complex, move the "should I run today" decision into the scrip
 ### On server restart
 
 ```cron
-@reboot  /usr/local/bin/on-boot.sh
+@reboot  /usr/local/bin/on-boot.sh   # runs once, right after the system boots
 ```
 
 ## Redirecting output to a log file
@@ -132,7 +132,7 @@ For anything more complex, move the "should I run today" decision into the scrip
 By default cron mails any output to the job's owner. Redirect it instead:
 
 ```cron
-30 2 * * *  /usr/local/bin/backup.sh >> /var/log/backup.log 2>&1
+30 2 * * *  /usr/local/bin/backup.sh >> /var/log/backup.log 2>&1   # append stdout+stderr to a log file
 ```
 
 `>>` appends stdout; `2>&1` sends stderr to the same place. Use `> /var/log/backup.log 2>&1` to overwrite each run, or `> /dev/null 2>&1` to discard everything (you then lose all error visibility).
@@ -140,7 +140,7 @@ By default cron mails any output to the job's owner. Redirect it instead:
 ## Mail from cron and MAILTO
 
 ```cron
-MAILTO="admin@example.com"
+MAILTO="admin@example.com"   # send any job output on this crontab to this address
 0 3 * * *  /usr/local/bin/backup.sh
 ```
 
@@ -156,8 +156,8 @@ Cron jobs run with a minimal environment: a short `PATH` (often just `/usr/bin:/
 - Set what you need explicitly at the top of the crontab:
 
 ```cron
-PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin   # explicit PATH, cron's default is minimal
+SHELL=/bin/bash                                                      # explicit shell, don't rely on the default
 ```
 
 ## Checking the cron service (systemd)
@@ -201,14 +201,14 @@ The log shows when cron *started* a job, not its output — that still goes to m
 **Script permissions.** Keep job scripts owned by root (or the service account) and not writable by others, since cron runs them with that account's privileges:
 
 ```bash
-sudo chown root:root /usr/local/bin/backup.sh
-sudo chmod 750 /usr/local/bin/backup.sh
+sudo chown root:root /usr/local/bin/backup.sh   # owned by root, not a regular user account
+sudo chmod 750 /usr/local/bin/backup.sh          # owner rwx, group rx, others nothing
 ```
 
 **Avoid overlapping runs.** If a job can take longer than its interval, two copies may run at once and corrupt data or thrash the disk. Wrap it in `flock` so a second start exits immediately:
 
 ```cron
-*/10 * * * *  /usr/bin/flock -n /var/lock/backup.lock /usr/local/bin/backup.sh >> /var/log/backup.log 2>&1
+*/10 * * * *  /usr/bin/flock -n /var/lock/backup.lock /usr/local/bin/backup.sh >> /var/log/backup.log 2>&1   # skip this run if the lock is already held
 ```
 
 `-n` means "fail now if the lock is held". Use `-w 60` instead to wait up to 60 seconds for the lock.
