@@ -7,6 +7,10 @@
  * code blocks only - see the .sheet-article pre rule below. Self-hosted so
  * it loads reliably for every visitor regardless of whether it's installed
  * on their machine, with no external CDN request.
+ *
+ * The rest of the site's typography (headings, nav, body copy) uses IBM
+ * Plex Mono / IBM Plex Sans, loaded via <link> tags in each template's
+ * <head> - see layouts/_default/*.html and layouts/sheets/list.html.
  */
 @font-face {
     font-family: "MesloLGS NF";
@@ -17,34 +21,61 @@
 }
 
 /*
- * Central place to control the site's two background colors. Change either
- * value here and it updates everywhere that color is used - the header/
- * menu background, and the main site background behind everything else
- * (cards, code blocks, and other UI surfaces keep their own colors below,
- * independent of this).
+ * Design tokens.
+ *
+ * The site runs two palettes side by side, deliberately:
+ *
+ * - The new light documentation theme (--bg, --surface, --ink, --accent,
+ *   etc.) is the default everywhere: header/nav, the about page, individual
+ *   sheet articles, and taxonomy listings.
+ *
+ * - The "legacy" dark palette (--menu-background, --site-background, and
+ *   the hard-coded hex values inside the protected /sheets block near the
+ *   bottom of this file) is kept intentionally for two zones that stay
+ *   dark on purpose: the homepage hero card, and the /sheets card grid's
+ *   existing pink/yellow/green/blue accent system + card separators, which
+ *   must not change. See body.sheets-page below for how that page opts
+ *   back into the dark palette.
  */
 :root {
     --menu-background: #202044;
     --site-background: #24253c;
+
+    --bg: #F6F7F5;
+    --surface: #FFFFFF;
+    --surface-2: #EFF2EF;
+    --ink: #14181C;
+    --ink-muted: #52605A;
+    --ink-faint: #8A968E;
+    --border: #DCE1DC;
+    --accent: #2E6B4F;
+    --accent-ink: #1F4A37;
+    --accent-wash: #E6EFE9;
+    --shadow: 0 1px 2px rgba(20, 24, 28, 0.04), 0 6px 20px rgba(20, 24, 28, 0.05);
+    --radius: 8px;
 }
 
 html {
     font-size: 16px;
-    background: var(--site-background);
+    background: var(--bg);
 }
 
 body {
     margin: 0;
     min-height: 100vh;
-    background: var(--site-background);
-    color: #cdcdcd;
-    font-family: "SFMono-Regular", "Menlo", "Monaco", "Consolas", monospace;
-    font-size: 0.9rem;
-    line-height: 1.2;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+h1, h2, h3, h4 {
+    font-family: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
 }
 
 .site {
-    max-width: 780px;
+    max-width: 860px;
     margin: 0 auto;
     padding: 0 18px;
 }
@@ -56,9 +87,8 @@ body {
 .site-header {
     width: 100vw;
     margin-left: calc(50% - 50vw);
-    background: var(--menu-background);
-    border-top: 2px solid #171717;
-    border-bottom: 1px solid #4a5751;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
     /*
      * Keep the menu pinned to the top of the viewport while the page
      * scrolls. `sticky` (not `fixed`) is used because .site-header is
@@ -89,9 +119,7 @@ body > .site-header {
 /*
  * Single control point for the header's height: this padding (plus the
  * .site-header border and the line-height of its content) is the only
- * thing sizing the header, on every page. Doubling it from the original
- * "padding: 2px 0 3px" (~5px) to 16px top/bottom takes the header from
- * ~28px to ~54px total - about 2x - without touching anything else.
+ * thing sizing the header, on every page.
  */
 .site-header-inner {
     display: flex;
@@ -118,24 +146,27 @@ body > .site-header {
 }
 
 .brand-prompt:hover {
-    opacity: 0.85;
+    opacity: 0.7;
 }
 
 nav {
     display: flex;
     align-items: center;
-    gap: 52px;
+    gap: 32px;
+    font-family: "IBM Plex Mono", monospace;
 }
 
 nav a {
-    color: #e0e77b;
+    color: var(--ink-muted);
     text-decoration: none;
-    font-size: 1rem;
+    font-size: 0.92rem;
+    letter-spacing: 0.01em;
 }
 
 nav a:hover {
-    color: #ffffff;
+    color: var(--accent-ink);
     text-decoration: underline;
+    text-underline-offset: 3px;
 }
 
 main {
@@ -144,27 +175,88 @@ main {
 }
 
 .home-main {
-    padding: 57px 0 70px;
+    padding: 44px 0 60px;
 }
 
 /*
- * Home hero: a direct child of <body> (like .site-header), so it's full
- * viewport width with no max-width wrapper - the two-column split below
- * (text column + photo column) needs the full width to work with.
+ * Terminal-style signature, shared by the header brand mark and the
+ * mini-prompt partial (/sheets, /about, homepage footer). A single,
+ * restrained ink/accent treatment - matching the reference's minimal
+ * mono/ink/green palette - replaces the old multi-color rainbow scheme,
+ * which was tuned for a dark background and doesn't have enough contrast
+ * on the new light one.
+ *
+ * Exception: /sheets keeps its content area on the legacy dark background
+ * (see body.sheets-page below), so its mini-prompt restores the original
+ * colors further down, scoped to that one page only.
+ */
+.terminal-prompt {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+.terminal-prompt .prompt-bracket,
+.terminal-prompt .prompt-user,
+.terminal-prompt .prompt-host,
+.terminal-prompt .prompt-dollar {
+    color: var(--ink-muted);
+}
+
+.terminal-prompt .prompt-at {
+    color: var(--accent-ink);
+}
+
+.terminal-prompt .prompt-cursor {
+    display: inline-block;
+    width: 0.5em;
+    height: 1em;
+    margin-left: 0.15em;
+    border: 0.09em solid var(--accent);
+    vertical-align: -0.15em;
+    animation: prompt-cursor-blink 1.1s steps(1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .terminal-prompt .prompt-cursor {
+        animation: none;
+    }
+}
+
+@keyframes prompt-cursor-blink {
+    0%, 49% {
+        opacity: 1;
+    }
+    50%, 100% {
+        opacity: 0;
+    }
+}
+
+/*
+ * Home hero. Rendered as a bordered, rounded, shadowed card - the site's
+ * general card treatment - sitting on the new light page background,
+ * rather than the old edge-to-edge dark strip. The card itself keeps its
+ * original dark surface and text colors (title, divider, description,
+ * social icons) unchanged, since they were already tuned for a dark
+ * background and read perfectly well there; only the page background
+ * around it, and the card's own shape (radius/shadow/contained width),
+ * are new.
  */
 .landing-main {
     max-width: none;
-    background: var(--site-background);
+    background: var(--bg);
+    padding: 48px min(6vw, 56px) 56px;
 }
 
 .landing-hero {
     display: grid;
     grid-template-columns: minmax(300px, 640px) 1fr;
     align-items: stretch;
-    /* Approximates "fill the rest of the viewport" below the ~54px header
-       and above the ~46px status bar footer, without needing to keep three
-       separate elements' heights in exact pixel sync. */
-    min-height: calc(100vh - 100px);
+    max-width: 1100px;
+    margin: 0 auto;
+    background: var(--site-background);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    min-height: clamp(320px, 38vw, 480px);
 }
 
 .hero-copy {
@@ -178,7 +270,7 @@ main {
 }
 
 .hero-photo {
-    /* ?v=2 cache-busts this specific image at the CDN/browser level - the
+    /* ?v=3 cache-busts this specific image at the CDN/browser level - the
        filename never changes when the photo is swapped, and this asset is
        served with a 7-day Cache-Control, so without a version bump here a
        previously-cached copy can keep showing after a photo change even
@@ -238,120 +330,6 @@ main {
     border: 0;
 }
 
-.landing-main .terminal-prompt {
-    margin: 0;
-    max-width: 100%;
-    min-width: 0;
-    color: #cdcdcd;
-    font-family: inherit;
-    font-weight: 400;
-    /* Small, terminal-output-sized text - it now sits above .hero-title as
-       a supporting element, not the hero's main heading, so it no longer
-       needs to scale up with viewport width the way .hero-title does. */
-    font-size: 0.95rem;
-    line-height: 1.4;
-    white-space: normal;
-    overflow-wrap: break-word;
-}
-
-.terminal-prompt .prompt-bracket {
-    color: #e67b85;
-}
-
-.terminal-prompt .prompt-user {
-    color: #e0e77b;
-}
-
-.terminal-prompt .prompt-at {
-    color: #58e0c1;
-}
-
-.terminal-prompt .prompt-host {
-    color: #7fc4f2;
-}
-
-.terminal-prompt .prompt-dollar {
-    color: #e8e8e8;
-}
-
-.terminal-prompt .prompt-cursor {
-    display: inline-block;
-    width: 0.5em;
-    height: 1em;
-    margin-left: 0.15em;
-    border: 0.09em solid #e8e8e8;
-    vertical-align: -0.15em;
-    animation: prompt-cursor-blink 1.1s steps(1) infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .terminal-prompt .prompt-cursor {
-        animation: none;
-    }
-}
-
-@keyframes prompt-cursor-blink {
-    0%, 49% {
-        opacity: 1;
-    }
-    50%, 100% {
-        opacity: 0;
-    }
-}
-
-.terminal-prompt .prompt-typed {
-    /*
-     * Pure-CSS typewriter: the box's own width is animated between 0 and
-     * the text's full width (12ch, matching "Hello friend"'s 12 characters
-     * in this monospace font), with overflow hidden and no wrapping. That
-     * reveals the text left-to-right when growing (typing) and hides it
-     * right-to-left when shrinking (deleting) - the text itself never
-     * changes, so screen readers just read it once, normally.
-     */
-    display: inline-block;
-    overflow: hidden;
-    vertical-align: bottom;
-    white-space: nowrap;
-    max-width: 100%;
-    width: 0;
-    margin-left: 0.4em;
-    color: #a6e22e;
-    animation: prompt-typed-loop 4.5s infinite;
-}
-
-/*
- * Each keyframe's animation-timing-function governs the transition to the
- * *next* keyframe, so the type/delete segments can step character-by-
- * character (steps(12, end)) while the hold segments stay perfectly still
- * in between - one loop: type (0-33%) -> hold full (33-55%) ->
- * delete (55-80%) -> hold empty (80-100%).
- */
-@keyframes prompt-typed-loop {
-    0% {
-        width: 0;
-        animation-timing-function: steps(12, end);
-    }
-    33% {
-        width: 12ch;
-        animation-timing-function: steps(1, end);
-    }
-    55% {
-        width: 12ch;
-        animation-timing-function: steps(12, end);
-    }
-    80%,
-    100% {
-        width: 0;
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .terminal-prompt .prompt-typed {
-        animation: none;
-        width: auto;
-    }
-}
-
 .landing-main .social-icons {
     display: flex;
     justify-content: flex-start;
@@ -380,9 +358,14 @@ main {
 }
 
 @media (max-width: 900px) {
+    .landing-main {
+        padding: 24px 16px 40px;
+    }
+
     .landing-hero {
         grid-template-columns: 1fr;
         min-height: auto;
+        border-radius: 12px;
     }
 
     .hero-copy {
@@ -406,16 +389,339 @@ main {
     }
 
     nav {
-        gap: 28px;
+        gap: 24px;
     }
 }
 
 /*
- * /sheets/ listing - dedicated to layouts/sheets/list.html only. Scoped
- * under .sheets-main throughout so none of this reaches the plain-list
- * taxonomy pages (/tags/*, /categories/) that still use
- * layouts/_default/list.html and the older .post-list rules below.
+ * Homepage status bar, below the hero card. Reuses the same mini-prompt
+ * partial as /sheets and /about for the right-hand signature; styled here
+ * to match the site's general footer treatment (a thin top border and
+ * muted text, no filled background) instead of the old dark bar.
  */
+.hero-status-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px min(6vw, 56px) 8px;
+    border-top: 1px solid var(--border);
+    color: var(--ink-faint);
+}
+
+.hero-status-bar .mini-prompt {
+    margin: 0;
+    text-align: left;
+}
+
+.hero-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--ink-faint);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.85rem;
+}
+
+.status-cursor {
+    display: inline-block;
+    width: 0.5em;
+    height: 1em;
+    background: var(--ink-faint);
+    animation: prompt-cursor-blink 1.1s steps(1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .status-cursor {
+        animation: none;
+    }
+}
+
+@media (max-width: 560px) {
+    .hero-status-bar {
+        flex-direction: column;
+        gap: 6px;
+        text-align: center;
+        padding: 16px 20px 32px;
+    }
+
+    .hero-status-bar .mini-prompt {
+        text-align: center;
+    }
+}
+
+/*
+ * Taxonomy fallback pages (/tags/*, /categories/*) - the plain post list
+ * used by layouts/_default/list.html. Not part of the protected /sheets
+ * system below, so it follows the new light theme like everything else.
+ */
+.post-list {
+    margin: 0;
+    padding: 0;
+}
+
+.post {
+    position: relative;
+    margin: 0 0 15px;
+    padding-left: 17px;
+}
+
+.post-title {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 1rem;
+    line-height: 1.3;
+}
+
+.bullet {
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+}
+
+a {
+    color: var(--accent-ink);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--accent);
+    text-decoration: underline;
+}
+
+.post-title a {
+    margin-left: 4px;
+    font-weight: 500;
+}
+
+.post-description,
+.post-tags {
+    margin-left: 0;
+    padding-left: 0;
+}
+
+.post-description {
+    margin-top: 3px;
+    color: var(--ink-muted);
+}
+
+.post-tags {
+    margin-top: 2px;
+    color: var(--accent-ink);
+    font-size: 0.78rem;
+    font-style: italic;
+}
+
+.article-main {
+    padding: 40px 0 72px;
+}
+
+/*
+ * Individual sheet article (and the /about page, which reuses this class).
+ * Rendered as a single bordered, rounded, shadowed card - the site's
+ * general card treatment, matching the reference's article/entry panels.
+ */
+.sheet-article {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 32px clamp(20px, 4vw, 40px) 40px;
+    color: var(--ink);
+    line-height: 1.65;
+}
+
+.sheet-article h1,
+.sheet-article h2,
+.sheet-article h3 {
+    color: var(--accent-ink);
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.sheet-article h1 {
+    margin: 0 0 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+    font-size: clamp(1.4rem, 2.6vw, 1.9rem);
+}
+
+.sheet-article h2 {
+    margin: 34px 0 10px;
+    font-size: 1.15rem;
+}
+
+.sheet-article h3 {
+    margin: 24px 0 8px;
+    font-size: 1.02rem;
+}
+
+.article-description {
+    margin: 0 0 20px;
+    color: var(--ink-muted);
+    font-size: 1.02rem;
+}
+
+.about-content {
+    display: grid;
+    grid-template-columns: minmax(150px, var(--about-media-width)) minmax(0, 1fr);
+    align-items: start;
+    gap: 26px;
+}
+
+.sheet-article .about-profile {
+    width: 100%;
+    margin: 0;
+    border: 0;
+    border-radius: var(--radius);
+}
+
+.about-copy > :last-child {
+    margin-bottom: 0;
+}
+
+.sheet-article p,
+.sheet-article ul,
+.sheet-article ol {
+    margin: 0 0 14px;
+}
+
+.sheet-article blockquote {
+    margin: 20px 0;
+    padding: 12px 16px;
+    background: var(--accent-wash);
+    border-left: 3px solid var(--accent);
+    border-radius: 4px;
+    color: var(--ink-muted);
+}
+
+.sheet-article pre {
+    overflow-x: auto;
+    margin: 14px 0 20px;
+    padding: 14px 16px;
+    /* Terminal-style font for fenced code blocks only. `.sheet-article code`
+       below is `font-family: inherit`, so code inside this <pre> picks this
+       up automatically; inline code (not inside a <pre>) is untouched and
+       keeps the site's regular text stack. */
+    font-family: "MesloLGS NF", "Meslo Nerd Font", "Meslo LG S", Menlo, Monaco, Consolas, monospace;
+    /*
+     * Monokai background/foreground. Chroma-highlighted blocks (most fenced
+     * code) already carry these exact values as an inline style on this
+     * same <pre> tag, so this is what actually shows there. It also serves
+     * as the fallback for any fenced block Chroma has no lexer for (e.g.
+     * ```cron), which is rendered as plain, unhighlighted <pre><code> with
+     * no inline style at all - those pick up this rule directly, so every
+     * code block gets the same Monokai look whether or not it was tokenized.
+     * Kept dark deliberately even on the new light page, matching the
+     * reference's own dark-terminal code block treatment.
+     */
+    background: #272822;
+    border: 1px solid #3e3d32;
+    border-radius: 6px;
+    color: #f8f8f2;
+    line-height: 1.5;
+    box-shadow: var(--shadow);
+}
+
+.sheet-article code {
+    font-family: inherit;
+    font-size: 0.9em;
+}
+
+.sheet-article :not(pre) > code {
+    /* Monokai's "highlight line" tone for the chip background, with its
+       string-yellow for the text, so inline code reads as part of the same
+       palette as the fenced blocks without competing with them. */
+    padding: 2px 6px;
+    background: #3e3d32;
+    color: #e6db74;
+    border-radius: 3px;
+}
+
+.sheet-article img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 20px 0 28px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+}
+
+@media (max-width: 560px) {
+    .site {
+        padding: 0 14px;
+    }
+
+    .home-main {
+        padding-top: 28px;
+    }
+
+    .post {
+        margin-bottom: 19px;
+    }
+
+    .sheet-article {
+        padding: 24px 18px 32px;
+    }
+
+    .about-content {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .sheet-article .about-profile {
+        width: min(220px, 100%);
+    }
+}
+
+/* ==========================================================================
+   PROTECTED: /sheets listing (layouts/sheets/list.html)
+   ==========================================================================
+   Dedicated to the /sheets/ card grid only. Scoped under .sheets-main
+   throughout so none of this reaches the plain-list taxonomy pages
+   (/tags/*, /categories/) above.
+
+   This block - including the pink/yellow/green/blue nth-child accent
+   cycle and the card borders/left-edge stripes that act as this page's
+   separators - is intentionally left byte-for-byte unchanged from before
+   the redesign. The page's content area is kept on the original dark
+   background (see body.sheets-page just below) specifically so these
+   colors keep exactly the contrast/appearance they had.
+   ========================================================================== */
+
+body.sheets-page {
+    background: var(--site-background);
+    color: #cdcdcd;
+}
+
+/* Restores the original dark-bg-tuned signature colors for this one page's
+   mini-prompt - see the shared .terminal-prompt rules above, which switch
+   to the new light-theme ink/accent palette everywhere else. */
+.sheets-page .mini-prompt .prompt-bracket {
+    color: #e67b85;
+}
+
+.sheets-page .mini-prompt .prompt-user {
+    color: #e0e77b;
+}
+
+.sheets-page .mini-prompt .prompt-at {
+    color: #58e0c1;
+}
+
+.sheets-page .mini-prompt .prompt-host {
+    color: #7fc4f2;
+}
+
+.sheets-page .mini-prompt .prompt-dollar {
+    color: #e8e8e8;
+}
+
+.sheets-page .mini-prompt .prompt-cursor {
+    border-color: #e8e8e8;
+}
+
 .sheets-main {
     padding: 44px 0 60px;
 }
@@ -545,9 +851,9 @@ main {
 }
 
 /* Small footer prompt, bottom-right of the /sheets/ content column. Reuses
-   the homepage's .terminal-prompt color/font/cursor rules as-is (they're
-   unscoped beyond .terminal-prompt itself); .mini-prompt only adds the
-   smaller size and placement specific to this page. */
+   the shared .terminal-prompt rules (with the dark-palette restoration
+   above); .mini-prompt only adds the smaller size and placement specific
+   to this page (and to /about, which reuses the same partial). */
 .mini-prompt {
     margin: 36px 0 0;
     text-align: right;
@@ -560,254 +866,6 @@ main {
     }
 }
 
-/*
- * Home page status bar, spanning the full width below the hero. Reuses the
- * same mini-prompt partial as /sheets and /about for the right-hand
- * signature (identical font/colors/cursor there too); the override below
- * only cancels that partial's own margin/alignment for this flex-row
- * context, scoped to .hero-status-bar so /sheets and /about are unaffected.
- */
-.hero-status-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    padding: 14px 24px;
-    background: var(--menu-background);
-    border-top: 1px solid #171717;
-}
-
-.hero-status-bar .mini-prompt {
-    margin: 0;
-    text-align: left;
-}
-
-.hero-status {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    color: #8a8a8a;
-    font-size: 0.85rem;
-}
-
-.status-cursor {
-    display: inline-block;
-    width: 0.5em;
-    height: 1em;
-    background: #8a8a8a;
-    animation: prompt-cursor-blink 1.1s steps(1) infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .status-cursor {
-        animation: none;
-    }
-}
-
-@media (max-width: 560px) {
-    .hero-status-bar {
-        flex-direction: column;
-        gap: 6px;
-        text-align: center;
-        padding: 12px 18px;
-    }
-
-    .hero-status-bar .mini-prompt {
-        text-align: center;
-    }
-}
-
-.post-list {
-    margin: 0;
-    padding: 0;
-}
-
-.post {
-    position: relative;
-    margin: 0 0 15px;
-    padding-left: 17px;
-}
-
-.post-title {
-    line-height: 1.2;
-}
-
-.bullet {
-    position: absolute;
-    left: 0;
-    color: #c9c9c9;
-}
-
-a {
-    color: #e67b85;
-}
-
-a:hover {
-    color: #ffadb2;
-}
-
-.post-title a {
-    margin-left: 4px;
-}
-
-.post-description,
-.post-tags {
-    margin-left: 0;
-    padding-left: 0;
-}
-
-.post-description {
-    margin-top: 2px;
-    color: #d0d0d0;
-}
-
-.post-tags {
-    margin-top: 1px;
-    color: #58e0c1;
-    font-size: 0.78rem;
-    font-style: italic;
-}
-
-.article-main {
-    padding: 48px 0 72px;
-}
-
-.sheet-article {
-    color: #d0d0d0;
-    line-height: 1.45;
-}
-
-.sheet-article h1,
-.sheet-article h2,
-.sheet-article h3 {
-    color: #e0e77b;
-    font-weight: normal;
-    line-height: 1.25;
-}
-
-.sheet-article h1 {
-    margin: 0 0 8px;
-    font-size: 1.28rem;
-}
-
-.sheet-article h2 {
-    margin: 30px 0 8px;
-    font-size: 1.05rem;
-}
-
-.sheet-article h3 {
-    margin: 22px 0 8px;
-    font-size: 0.96rem;
-}
-
-.article-description {
-    margin: 0 0 24px;
-    color: #d0d0d0;
-}
-
-.about-content {
-    display: grid;
-    grid-template-columns: minmax(150px, var(--about-media-width)) minmax(0, 1fr);
-    align-items: start;
-    gap: 26px;
-}
-
-.sheet-article .about-profile {
-    width: 100%;
-    margin: 0;
-    border: 0;
-}
-
-.about-copy > :last-child {
-    margin-bottom: 0;
-}
-
-.sheet-article p,
-.sheet-article ul,
-.sheet-article ol {
-    margin: 0 0 14px;
-}
-
-.sheet-article blockquote {
-    margin: 18px 0;
-    padding-left: 13px;
-    border-left: 2px solid #67756d;
-    color: #c6c6c6;
-}
-
-.sheet-article pre {
-    overflow-x: auto;
-    margin: 12px 0 18px;
-    padding: 10px 12px;
-    /* Terminal-style font for fenced code blocks only. `.sheet-article code`
-       below is `font-family: inherit`, so code inside this <pre> picks this
-       up automatically; inline code (not inside a <pre>) is untouched and
-       keeps the site's regular SFMono-Regular text stack. */
-    font-family: "MesloLGS NF", "Meslo Nerd Font", "Meslo LG S", Menlo, Monaco, Consolas, monospace;
-    /*
-     * Monokai background/foreground. Chroma-highlighted blocks (most fenced
-     * code) already carry these exact values as an inline style on this
-     * same <pre> tag, so this is what actually shows there. It also serves
-     * as the fallback for any fenced block Chroma has no lexer for (e.g.
-     * ```cron), which is rendered as plain, unhighlighted <pre><code> with
-     * no inline style at all - those pick up this rule directly, so every
-     * code block gets the same Monokai look whether or not it was tokenized.
-     */
-    background: #272822;
-    border: 1px solid #3e3d32;
-    color: #f8f8f2;
-    line-height: 1.35;
-}
-
-.sheet-article code {
-    font-family: inherit;
-    font-size: 0.9em;
-}
-
-.sheet-article :not(pre) > code {
-    /* Monokai's "highlight line" tone for the chip background, with its
-       string-yellow for the text, so inline code reads as part of the same
-       palette as the fenced blocks without competing with them. */
-    padding: 1px 4px;
-    background: #3e3d32;
-    color: #e6db74;
-}
-
-.sheet-article img {
-    display: block;
-    max-width: 100%;
-    height: auto;
-    margin: 16px 0 24px;
-    border: 1px solid #444;
-}
-
-@media (max-width: 560px) {
-    .site {
-        padding: 0 14px;
-    }
-
-    .home-main {
-        padding-top: 34px;
-    }
-
-    .post {
-        margin-bottom: 19px;
-    }
-
-    .about-content {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-
-    .sheet-article .about-profile {
-        width: min(220px, 100%);
-    }
-}
-
-a {
-    color: #d96c75;
-}
-
-a:hover {
-    text-decoration: underline;
-}
+/* ==========================================================================
+   END PROTECTED: /sheets listing
+   ========================================================================== */
