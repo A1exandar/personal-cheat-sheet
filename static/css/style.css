@@ -251,7 +251,7 @@ main {
        served with a 7-day Cache-Control, so without a version bump here a
        previously-cached copy can keep showing after a photo change even
        past a hard refresh (the CDN edge cache isn't cleared by that). */
-    background-image: url("/images/home-hero-bg.jpg?v=3");
+    background-image: url("/images/home-hero-bg.jpg?v=4");
     background-size: cover;
     background-position: center;
     border: 1px solid var(--border);
