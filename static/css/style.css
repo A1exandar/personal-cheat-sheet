@@ -21,26 +21,18 @@
 }
 
 /*
- * Design tokens.
+ * Design tokens - the site runs a single light documentation theme
+ * everywhere: header/nav, the homepage, the about page, individual sheet
+ * articles, taxonomy listings, and the /sheets card grid.
  *
- * The site runs two palettes side by side, deliberately:
- *
- * - The new light documentation theme (--bg, --surface, --ink, --accent,
- *   etc.) is the default everywhere: header/nav, the about page, individual
- *   sheet articles, and taxonomy listings.
- *
- * - The "legacy" dark palette (--menu-background, --site-background, and
- *   the hard-coded hex values inside the protected /sheets block near the
- *   bottom of this file) is kept intentionally for two zones that stay
- *   dark on purpose: the homepage hero card, and the /sheets card grid's
- *   existing pink/yellow/green/blue accent system + card separators, which
- *   must not change. See body.sheets-page below for how that page opts
- *   back into the dark palette.
+ * The /sheets card grid keeps its original pink/yellow/green/blue accent
+ * identity (the six --accent values in the nth-child cycle near the bottom
+ * of this file) as the visible left-edge stripe on each card - that system
+ * is unchanged. Everything else on that page (card surface, borders, text)
+ * now matches the site's light palette like every other page, instead of
+ * keeping its own dark background.
  */
 :root {
-    --menu-background: #202044;
-    --site-background: #24253c;
-
     --bg: #F6F7F5;
     --surface: #FFFFFF;
     --surface-2: #EFF2EF;
@@ -184,11 +176,7 @@ main {
  * restrained ink/accent treatment - matching the reference's minimal
  * mono/ink/green palette - replaces the old multi-color rainbow scheme,
  * which was tuned for a dark background and doesn't have enough contrast
- * on the new light one.
- *
- * Exception: /sheets keeps its content area on the legacy dark background
- * (see body.sheets-page below), so its mini-prompt restores the original
- * colors further down, scoped to that one page only.
+ * now that every page (including /sheets) uses the light background.
  */
 .terminal-prompt {
     font-family: "IBM Plex Mono", ui-monospace, monospace;
@@ -231,14 +219,9 @@ main {
 }
 
 /*
- * Home hero. Rendered as a bordered, rounded, shadowed card - the site's
- * general card treatment - sitting on the new light page background,
- * rather than the old edge-to-edge dark strip. The card itself keeps its
- * original dark surface and text colors (title, divider, description,
- * social icons) unchanged, since they were already tuned for a dark
- * background and read perfectly well there; only the page background
- * around it, and the card's own shape (radius/shadow/contained width),
- * are new.
+ * Home hero. A plain, light section - like the reference's own header.top -
+ * with no card/box around the text column, so it reads as part of the same
+ * page as everything else instead of a separate dark panel.
  */
 .landing-main {
     max-width: none;
@@ -250,13 +233,10 @@ main {
     display: grid;
     grid-template-columns: minmax(300px, 640px) 1fr;
     align-items: stretch;
+    gap: 48px;
     max-width: 1100px;
     margin: 0 auto;
-    background: var(--site-background);
-    border-radius: 16px;
-    box-shadow: var(--shadow);
-    overflow: hidden;
-    min-height: clamp(320px, 38vw, 480px);
+    min-height: clamp(280px, 34vw, 420px);
 }
 
 .hero-copy {
@@ -266,7 +246,6 @@ main {
     align-items: flex-start;
     gap: 16px;
     min-width: 0;
-    padding: 48px min(7vw, 64px);
 }
 
 .hero-photo {
@@ -278,12 +257,14 @@ main {
     background-image: url("/images/home-hero-bg.jpg?v=3");
     background-size: cover;
     background-position: center;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
 }
 
 .hero-title {
     margin: 0;
     max-width: 100%;
-    color: #e8e8e8;
+    color: var(--ink);
     font-family: inherit;
     font-weight: 700;
     font-size: clamp(2.2rem, 5vw, 3.6rem);
@@ -294,20 +275,20 @@ main {
 
 .hero-title-accent {
     display: block;
-    color: #58e0c1;
+    color: var(--accent-ink);
 }
 
 .hero-divider {
     display: block;
     width: 46px;
     height: 3px;
-    background: #58e0c1;
+    background: var(--accent);
 }
 
 .hero-description {
     margin: 0;
     max-width: 46ch;
-    color: #b8b8b8;
+    color: var(--ink-muted);
     font-size: 0.95rem;
     line-height: 1.5;
 }
@@ -334,17 +315,38 @@ main {
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    gap: 14px;
+    gap: 10px;
+}
+
+/*
+ * Two of these icons (X, GitHub) are plain white glyphs, so each one gets
+ * a small dark chip behind it - the icons themselves are untouched, this
+ * is purely a background wrapper - keeping them visible now that the hero
+ * sits on the site's light background instead of a dark panel.
+ */
+.landing-main .social-icons a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: var(--ink);
+    border-radius: var(--radius);
+    transition: background-color 0.15s ease;
+}
+
+.landing-main .social-icons a:hover {
+    background: var(--accent-ink);
 }
 
 .landing-main .social-icons img {
     display: block;
-    width: 28px !important;
-    height: 28px !important;
-    max-width: 28px !important;
-    max-height: 28px !important;
+    width: 20px !important;
+    height: 20px !important;
+    max-width: 20px !important;
+    max-height: 20px !important;
     object-fit: contain;
-    opacity: 0.88;
+    opacity: 0.92;
 }
 
 .landing-main .social-icons a:hover img {
@@ -352,9 +354,7 @@ main {
 }
 
 .icon-divider {
-    width: 1px;
-    height: 22px;
-    background: rgba(255, 255, 255, 0.18);
+    display: none;
 }
 
 @media (max-width: 900px) {
@@ -365,12 +365,11 @@ main {
     .landing-hero {
         grid-template-columns: 1fr;
         min-height: auto;
-        border-radius: 12px;
+        gap: 28px;
     }
 
     .hero-copy {
         order: 1;
-        padding: 40px 24px 32px;
     }
 
     .hero-photo {
@@ -676,51 +675,20 @@ a:hover {
 }
 
 /* ==========================================================================
-   PROTECTED: /sheets listing (layouts/sheets/list.html)
+   /sheets listing (layouts/sheets/list.html)
    ==========================================================================
    Dedicated to the /sheets/ card grid only. Scoped under .sheets-main
    throughout so none of this reaches the plain-list taxonomy pages
    (/tags/*, /categories/) above.
 
-   This block - including the pink/yellow/green/blue nth-child accent
-   cycle and the card borders/left-edge stripes that act as this page's
-   separators - is intentionally left byte-for-byte unchanged from before
-   the redesign. The page's content area is kept on the original dark
-   background (see body.sheets-page just below) specifically so these
-   colors keep exactly the contrast/appearance they had.
+   The card grid's pink/yellow/green/blue accent identity - the six
+   --accent values in the nth-child cycle below, used as each card's
+   left-edge stripe - is unchanged. Cards now sit on the site's light
+   surface like every other card on the site, so their neutral colors
+   (background, border, title/description/tag text) follow the same
+   light-theme tokens as the rest of the site instead of the old dark
+   palette.
    ========================================================================== */
-
-body.sheets-page {
-    background: var(--site-background);
-    color: #cdcdcd;
-}
-
-/* Restores the original dark-bg-tuned signature colors for this one page's
-   mini-prompt - see the shared .terminal-prompt rules above, which switch
-   to the new light-theme ink/accent palette everywhere else. */
-.sheets-page .mini-prompt .prompt-bracket {
-    color: #e67b85;
-}
-
-.sheets-page .mini-prompt .prompt-user {
-    color: #e0e77b;
-}
-
-.sheets-page .mini-prompt .prompt-at {
-    color: #58e0c1;
-}
-
-.sheets-page .mini-prompt .prompt-host {
-    color: #7fc4f2;
-}
-
-.sheets-page .mini-prompt .prompt-dollar {
-    color: #e8e8e8;
-}
-
-.sheets-page .mini-prompt .prompt-cursor {
-    border-color: #e8e8e8;
-}
 
 .sheets-main {
     padding: 44px 0 60px;
@@ -732,15 +700,15 @@ body.sheets-page {
 
 .sheets-title {
     margin: 0 0 8px;
-    color: #e0e77b;
-    font-weight: 400;
+    color: var(--accent-ink);
+    font-weight: 600;
     font-size: 1.6rem;
     letter-spacing: 0.02em;
 }
 
 .sheets-description {
     margin: 0;
-    color: #d0d0d0;
+    color: var(--ink-muted);
 }
 
 .sheet-cards {
@@ -754,13 +722,14 @@ body.sheets-page {
     align-items: center;
     gap: 14px;
     padding: 14px 16px;
-    background: #26282a;
-    border: 1px solid #3e3d32;
+    background: var(--surface);
+    border: 1px solid var(--border);
     /* The accent color itself is set per-card by the nth-child cycle below;
        this rule only wires it up to a visible left edge, so future sheets
        automatically get a color with no per-article change needed. */
     border-left: 3px solid var(--accent, #58e0c1);
     border-radius: 3px;
+    box-shadow: var(--shadow);
     color: inherit;
     text-decoration: none;
     transition: background-color 0.15s ease, border-color 0.15s ease;
@@ -768,8 +737,8 @@ body.sheets-page {
 
 .sheet-card:hover,
 .sheet-card:focus-visible {
-    background: #2e3032;
-    border-color: #565349;
+    background: var(--surface-2);
+    border-color: var(--ink-faint);
     border-left-color: var(--accent, #58e0c1);
 }
 
@@ -791,7 +760,9 @@ body.sheets-page {
 }
 
 /* A small, repeating accent cycle - each new sheet picks up the next color
-   automatically, with no manual color setting added to any article. */
+   automatically, with no manual color setting added to any article. These
+   six values are the site's original pink/yellow/green/blue/purple system,
+   unchanged - only the card's own surface moved from dark to light. */
 .sheet-card:nth-child(6n+1) { --accent: #e67b85; }
 .sheet-card:nth-child(6n+2) { --accent: #e0e77b; }
 .sheet-card:nth-child(6n+3) { --accent: #58e0c1; }
@@ -807,15 +778,15 @@ body.sheets-page {
 
 .sheet-card-title {
     margin: 0 0 4px;
-    color: #f0f0f0;
-    font-weight: 400;
+    color: var(--ink);
+    font-weight: 500;
     font-size: 1rem;
     line-height: 1.3;
 }
 
 .sheet-card-description {
     margin: 0;
-    color: #b8b8b8;
+    color: var(--ink-muted);
     font-size: 0.85rem;
     line-height: 1.4;
 }
@@ -827,19 +798,19 @@ body.sheets-page {
 }
 
 .sheet-card-tag {
-    color: #58e0c1;
+    color: var(--accent-ink);
     font-style: italic;
 }
 
 .sheet-card-tag:not(:last-child)::after {
     content: ", ";
-    color: #6b6b6b;
+    color: var(--ink-faint);
     font-style: normal;
 }
 
 .sheet-card-arrow {
     flex-shrink: 0;
-    color: #8a8a8a;
+    color: var(--ink-faint);
     font-size: 1.1rem;
     transition: color 0.15s ease;
 }
@@ -851,9 +822,9 @@ body.sheets-page {
 }
 
 /* Small footer prompt, bottom-right of the /sheets/ content column. Reuses
-   the shared .terminal-prompt rules (with the dark-palette restoration
-   above); .mini-prompt only adds the smaller size and placement specific
-   to this page (and to /about, which reuses the same partial). */
+   the shared .terminal-prompt rules; .mini-prompt only adds the smaller
+   size and placement specific to this page (and to /about, which reuses
+   the same partial). */
 .mini-prompt {
     margin: 36px 0 0;
     text-align: right;
@@ -865,7 +836,3 @@ body.sheets-page {
         text-align: center;
     }
 }
-
-/* ==========================================================================
-   END PROTECTED: /sheets listing
-   ========================================================================== */
