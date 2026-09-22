@@ -185,10 +185,7 @@ main {
 .terminal-prompt .prompt-bracket,
 .terminal-prompt .prompt-user,
 .terminal-prompt .prompt-host,
-.terminal-prompt .prompt-dollar {
-    color: var(--ink-muted);
-}
-
+.terminal-prompt .prompt-dollar,
 .terminal-prompt .prompt-at {
     color: var(--accent-ink);
 }
