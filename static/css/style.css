@@ -21,29 +21,29 @@
 }
 
 /*
- * Design tokens - the site runs a single light documentation theme
+ * Design tokens - matching the reference artifact's dark palette (its
+ * prefers-color-scheme: dark variant), which is the site's single theme
  * everywhere: header/nav, the homepage, the about page, individual sheet
  * articles, taxonomy listings, and the /sheets card grid.
  *
  * The /sheets card grid keeps its original pink/yellow/green/blue accent
  * identity (the six --accent values in the nth-child cycle near the bottom
  * of this file) as the visible left-edge stripe on each card - that system
- * is unchanged. Everything else on that page (card surface, borders, text)
- * now matches the site's light palette like every other page, instead of
- * keeping its own dark background.
+ * is unchanged; only the neutral surface/text tokens below are shared with
+ * the rest of the site.
  */
 :root {
-    --bg: #F6F7F5;
-    --surface: #FFFFFF;
-    --surface-2: #EFF2EF;
-    --ink: #14181C;
-    --ink-muted: #52605A;
-    --ink-faint: #8A968E;
-    --border: #DCE1DC;
-    --accent: #2E6B4F;
-    --accent-ink: #1F4A37;
-    --accent-wash: #E6EFE9;
-    --shadow: 0 1px 2px rgba(20, 24, 28, 0.04), 0 6px 20px rgba(20, 24, 28, 0.05);
+    --bg: #10140F;
+    --surface: #161C17;
+    --surface-2: #1D251E;
+    --ink: #E7ECE7;
+    --ink-muted: #9BAAA1;
+    --ink-faint: #63756B;
+    --border: #2A342C;
+    --accent: #5FCB93;
+    --accent-ink: #8CE0B3;
+    --accent-wash: #1B2C22;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.35);
     --radius: 8px;
 }
 
@@ -315,38 +315,17 @@ main {
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    gap: 10px;
-}
-
-/*
- * Two of these icons (X, GitHub) are plain white glyphs, so each one gets
- * a small dark chip behind it - the icons themselves are untouched, this
- * is purely a background wrapper - keeping them visible now that the hero
- * sits on the site's light background instead of a dark panel.
- */
-.landing-main .social-icons a {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    background: var(--ink);
-    border-radius: var(--radius);
-    transition: background-color 0.15s ease;
-}
-
-.landing-main .social-icons a:hover {
-    background: var(--accent-ink);
+    gap: 14px;
 }
 
 .landing-main .social-icons img {
     display: block;
-    width: 20px !important;
-    height: 20px !important;
-    max-width: 20px !important;
-    max-height: 20px !important;
+    width: 28px !important;
+    height: 28px !important;
+    max-width: 28px !important;
+    max-height: 28px !important;
     object-fit: contain;
-    opacity: 0.92;
+    opacity: 0.88;
 }
 
 .landing-main .social-icons a:hover img {
@@ -354,7 +333,9 @@ main {
 }
 
 .icon-divider {
-    display: none;
+    width: 1px;
+    height: 22px;
+    background: var(--border);
 }
 
 @media (max-width: 900px) {
