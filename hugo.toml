@@ -1,6 +1,13 @@
 baseURL = 'https://a1exnotes.com/'
 locale = 'en-us'
-title = 'My New Hugo Project'
+title = 'Personal Cheat Sheet'
+
+[params]
+  # Site-wide fallback description, used for social preview meta tags
+  # (og:description / twitter:description) on any page that has neither
+  # its own front matter `description` nor enough content for Hugo to
+  # auto-generate a summary from - e.g. taxonomy list pages.
+  description = 'Practical notes, commands and solutions for Linux, infrastructure and automation.'
 
 [markup]
   [markup.highlight]

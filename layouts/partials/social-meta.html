@@ -1,0 +1,49 @@
+{{/*
+  Open Graph + X/Twitter Card metadata, centralized in one partial so every
+  template's <head> includes this once instead of duplicating the same
+  tags four times. Include with: {{ partial "social-meta.html" . }}
+
+  Fallback order:
+    title       -> .Title, suffixed with the site name on every page
+                   except the homepage (matches each template's own
+                   <title> convention already in use).
+    description -> front matter `description` -> auto-generated page
+                   summary -> site-wide params.description (hugo.toml).
+    image       -> front matter `image` (front matter path is resolved to
+                   an absolute URL via absURL) -> default social image.
+*/}}
+
+{{ $title := .Title }}
+{{ if not .IsHome }}
+  {{ $title = printf "%s — %s" .Title .Site.Title }}
+{{ end }}
+
+{{ $description := .Description }}
+{{ if not $description }}
+  {{ $description = .Summary | plainify | truncate 160 }}
+{{ end }}
+{{ if not $description }}
+  {{ $description = .Site.Params.description }}
+{{ end }}
+
+{{ $image := "images/social/default.png" | absURL }}
+{{ with .Params.image }}
+  {{ $image = . | absURL }}
+{{ end }}
+
+{{ $ogType := "website" }}
+{{ if and .IsPage (eq .Section "sheets") }}
+  {{ $ogType = "article" }}
+{{ end }}
+
+<meta property="og:title" content="{{ $title }}">
+<meta property="og:description" content="{{ $description }}">
+<meta property="og:image" content="{{ $image }}">
+<meta property="og:url" content="{{ .Permalink }}">
+<meta property="og:type" content="{{ $ogType }}">
+<meta property="og:site_name" content="{{ .Site.Title }}">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ $title }}">
+<meta name="twitter:description" content="{{ $description }}">
+<meta name="twitter:image" content="{{ $image }}">
