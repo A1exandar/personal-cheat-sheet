@@ -1,6 +1,16 @@
 baseURL = 'https://a1exnotes.com/'
 locale = 'en-us'
 title = 'Personal Cheat Sheet'
+# Without this, Hugo interprets a bare front-matter date (e.g. `date =
+# 2026-09-27`, no explicit offset) as UTC midnight rather than local
+# midnight. Near midnight CEST/CET, the local calendar day has already
+# rolled over while UTC hasn't yet, so a page dated "today" was actually
+# ~1-2 hours in the future relative to UTC - and both `hugo` locally and
+# the GitHub Actions build (which also runs in UTC, with no --buildFuture
+# flag) silently exclude future-dated content from the build with no
+# error. Setting the site's real timezone here makes bare dates resolve
+# correctly relative to actual local time instead.
+timeZone = 'Europe/Belgrade'
 
 [params]
   # Site-wide fallback description, used for social preview meta tags
