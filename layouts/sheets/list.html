@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/css/style.css?v=25">
+    <link rel="stylesheet" href="/css/style.css?v=26">
 </head>
 
 <body>
@@ -20,7 +20,7 @@
         <main class="sheets-main">
             <div class="sheets-intro">
                 <h1 class="sheets-title">{{ .Title }}</h1>
-                <p class="sheets-description">{{ .Description }}</p>
+                <p class="sheets-description" data-i18n="sheets.description">{{ .Description }}</p>
             </div>
 
             <div class="sheet-cards">
@@ -43,5 +43,6 @@
             {{ partial "mini-prompt.html" . }}
         </main>
     </div>
+    <script src="/js/i18n.js" defer></script>
 </body>
 </html>

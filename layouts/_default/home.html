@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/css/style.css?v=25">
+    <link rel="stylesheet" href="/css/style.css?v=26">
 </head>
 
 <body class="home-page">
@@ -19,11 +19,11 @@
     <main class="landing-main">
         <section class="landing-hero" aria-label="Introduction">
             <div class="hero-copy">
-                <h1 class="hero-title">Personal<span class="hero-title-accent">Cheat Sheet</span></h1>
+                <h1 class="hero-title"><span data-i18n="hero.personal">Personal</span><span class="hero-title-accent">Cheat Sheet</span></h1>
 
                 <span class="hero-divider" aria-hidden="true"></span>
 
-                <p class="hero-description">Practical notes, commands and solutions<br>for Linux, infrastructure and automation.</p>
+                <p class="hero-description" data-i18n="hero.description">Practical notes, commands and solutions<br>for Linux, infrastructure and automation.</p>
 
                 <div class="social-icons" aria-label="Social profiles">
                     <a href="https://x.com/A1exandar_" target="_blank" rel="noopener noreferrer" aria-label="X">
@@ -53,8 +53,9 @@
     </main>
 
     <footer class="hero-status-bar">
-        <span class="hero-status">Ready.<span class="status-cursor" aria-hidden="true"></span></span>
+        <span class="hero-status"><span data-i18n="footer.ready">Ready.</span><span class="status-cursor" aria-hidden="true"></span></span>
         {{ partial "mini-prompt.html" . }}
     </footer>
+    <script src="/js/i18n.js" defer></script>
 </body>
 </html>

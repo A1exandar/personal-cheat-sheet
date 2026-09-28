@@ -161,6 +161,25 @@ nav a:hover {
     text-underline-offset: 3px;
 }
 
+/* Client-side EN/DE UI language toggle - see /js/i18n.js */
+.lang-toggle {
+    font-family: inherit;
+    font-size: 0.8rem;
+    letter-spacing: 0.02em;
+    color: var(--ink-muted);
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 3px 9px;
+    line-height: 1.4;
+    cursor: pointer;
+}
+
+.lang-toggle:hover {
+    color: var(--accent-ink);
+    border-color: var(--accent);
+}
+
 main {
     max-width: 740px;
     margin: 0 auto;
