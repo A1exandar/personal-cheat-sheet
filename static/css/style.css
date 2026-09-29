@@ -280,6 +280,7 @@ main {
     background-position: center;
     border: 1px solid var(--border);
     border-radius: var(--radius);
+    filter: brightness(0.5);
 }
 
 .hero-title {
