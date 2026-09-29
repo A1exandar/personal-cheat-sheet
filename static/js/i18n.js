@@ -644,7 +644,7 @@
 
         var toggle = document.querySelector("[data-lang-toggle]");
         if (toggle) {
-            toggle.textContent = lang === "de" ? "EN" : "DE";
+            toggle.textContent = lang === "de" ? "🇬🇧 EN" : "🇩🇪🇦🇹 DE";
             toggle.setAttribute("aria-label", lang === "de" ? "Switch to English" : "Auf Deutsch umschalten");
         }
     }
