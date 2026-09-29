@@ -274,11 +274,11 @@ body.home-page > .site-header {
 
 .landing-hero {
     display: grid;
-    grid-template-columns: minmax(300px, 640px) 1fr;
+    grid-template-columns: minmax(280px, 420px) 1fr;
     align-items: stretch;
     gap: 48px;
     width: 100%;
-    max-width: 1100px;
+    max-width: 880px;
     margin: 0 auto;
     min-height: clamp(280px, 34vw, 420px);
 }
