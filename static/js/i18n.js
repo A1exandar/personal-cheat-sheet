@@ -39,7 +39,8 @@
         "card.tar-compression-cheat-sheet.description": "tar-Archive erstellen, extrahieren und untersuchen, mit gzip/bzip2/xz-Kompression kombinieren und mit zip arbeiten - mit den Flags, die im Alltag wirklich wichtig sind.",
         "card.ufw-firewall-cheat-sheet.description": "UFW unter Ubuntu/Debian sicher einrichten: zuerst SSH erlauben, Standardrichtlinien festlegen, Web-Ports öffnen, App-Profile nutzen und Fehler beheben.",
         "card.vim-neovim-cheat-sheet.description": "Zentrale modale Vim-Befehle, die in Vim und Neovim identisch funktionieren, plus die tatsächlichen Unterschiede zwischen beiden - Konfigurationsdateien, LSP-Unterstützung und das Plugin-Ökosystem.",
-        "card.wordpress-nginx-troubleshooting-cheat-sheet.description": "Runbook von Symptom zu Lösung für WordPress hinter Nginx und PHP-FPM unter Ubuntu: Gateway-Fehler, Berechtigungen, Datenbankprobleme, TLS, Performance und Server-Wartung."
+        "card.wordpress-nginx-troubleshooting-cheat-sheet.description": "Runbook von Symptom zu Lösung für WordPress hinter Nginx und PHP-FPM unter Ubuntu: Gateway-Fehler, Berechtigungen, Datenbankprobleme, TLS, Performance und Server-Wartung.",
+        "card.monitoring-tools-cheat-sheet.description": "Linux-Systeme überwachen mit htop, glances und netdata für schnelle Checks auf einem einzelnen Host, plus wie Zabbix und Grafana für flottenweites Monitoring und Dashboards ins Bild passen."
     };
 
     /*
@@ -593,7 +594,36 @@
         "# then confirm logrotate actually runs on schedule": "# dann bestätigen, dass logrotate tatsächlich planmäßig läuft",
         "# always run this before reload or restart, no exceptions": "# dies immer vor reload oder restart ausführen, ohne Ausnahme",
         "# only if -t passed": "# nur wenn -t erfolgreich war",
-        "# confirm outbound access to an authenticated relay": "# ausgehenden Zugriff auf ein authentifiziertes Relay bestätigen"
+        "# confirm outbound access to an authenticated relay": "# ausgehenden Zugriff auf ein authentifiziertes Relay bestätigen",
+
+        "# launch it - no flags needed for basic use": "# starten - keine Flags für die Grundnutzung nötig",
+        "# only show processes owned by this user": "# nur Prozesse dieses Benutzers anzeigen",
+        "# only show these specific PIDs": "# nur diese bestimmten PIDs anzeigen",
+        "# update every 0.5 seconds (delay is in tenths of a second)": "# alle 0,5 Sekunden aktualisieren (delay ist in Zehntelsekunden)",
+        "# latest version, any distro": "# neueste Version, jede Distribution",
+        "# launch the interactive terminal view": "# die interaktive Terminal-Ansicht starten",
+        "# web server mode - view at http://<host>:61208 from any browser": "# Webserver-Modus - unter http://<host>:61208 in jedem Browser ansehen",
+        "# stream metrics out to InfluxDB, Prometheus, etc.": "# Metriken an InfluxDB, Prometheus usw. weiterleiten",
+        "# refresh every 5 seconds instead of the 3s default": "# alle 5 Sekunden statt der Standard-3s aktualisieren",
+        "# hide a section you don't care about, to fit more on screen": "# einen Abschnitt ausblenden, der nicht interessiert, um mehr auf den Bildschirm zu bekommen",
+        "# One-line installer - see the safety note below before running this on a server you don't control": "# Ein-Zeilen-Installer - vor der Ausführung auf einem fremden Server den Sicherheitshinweis unten lesen",
+        "# confirm it's running": "# bestätigen, dass es läuft",
+        "# enable on boot + start now": "# beim Booten aktivieren + jetzt starten",
+        "# the dashboard - no login required by default (see safety notes)": "# das Dashboard - standardmäßig ohne Login (siehe Sicherheitshinweise)",
+        "# apply a config change": "# eine Konfigurationsänderung anwenden",
+        "# main config file": "# Haupt-Konfigurationsdatei",
+        "# configure alert notifications (email, Slack, etc.)": "# Alarmbenachrichtigungen konfigurieren (E-Mail, Slack usw.)",
+        "# On each monitored host - just the agent, not the full server": "# Auf jedem überwachten Host - nur der Agent, nicht der vollständige Server",
+        "# /etc/zabbix/zabbix_agent2.conf - the two lines that matter for a basic setup": "# /etc/zabbix/zabbix_agent2.conf - die zwei Zeilen, die für eine Grundkonfiguration zählen",
+        "# test a single item key locally, without the server": "# einen einzelnen Item-Key lokal testen, ohne den Server",
+        "# watch the agent's own logs": "# die eigenen Logs des Agenten beobachten",
+        "# default web UI, default login admin/admin (change it immediately)": "# Standard-Web-UI, Standard-Login admin/admin (sofort ändern)",
+        "# main config file (ports, auth, plugins)": "# Haupt-Konfigurationsdatei (Ports, Auth, Plugins)",
+        "# add a data source/panel plugin": "# ein Datenquellen-/Panel-Plugin hinzufügen",
+        "# Fastest possible check when you SSH into an unfamiliar server": "# Schnellstmögliche Prüfung beim SSH auf einen unbekannten Server",
+        "# One-screen health check including disk and network, no scrolling needed": "# Health-Check auf einem Bildschirm inklusive Disk und Netzwerk, ohne Scrollen",
+        "# See if netdata is already running on a box someone else set up": "# Prüfen, ob netdata bereits auf einer von jemand anderem eingerichteten Box läuft",
+        "# Confirm a Zabbix agent can actually reach and be reached by its server": "# Bestätigen, dass ein Zabbix-Agent seinen Server tatsächlich erreichen kann und von ihm erreicht wird"
     };
 
     var STORAGE_KEY = "site-lang";
