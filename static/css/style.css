@@ -21,10 +21,10 @@
 }
 
 /*
- * Design tokens - matching the reference artifact's dark palette (its
- * prefers-color-scheme: dark variant), which is the site's single theme
- * everywhere: header/nav, the homepage, the about page, individual sheet
- * articles, taxonomy listings, and the /sheets card grid.
+ * Design tokens - dark blue theme (switched from the original green theme
+ * 2026-09-29), the site's single theme everywhere: header/nav, the
+ * homepage, the about page, individual sheet articles, taxonomy listings,
+ * and the /sheets card grid.
  *
  * The /sheets card grid keeps its original pink/yellow/green/blue accent
  * identity (the six --accent values in the nth-child cycle near the bottom
@@ -33,16 +33,18 @@
  * the rest of the site.
  */
 :root {
-    --bg: #10140F;
-    --surface: #161C17;
-    --surface-2: #1D251E;
-    --ink: #E7ECE7;
-    --ink-muted: #9BAAA1;
-    --ink-faint: #63756B;
-    --border: #2A342C;
-    --accent: #5FCB93;
-    --accent-ink: #8CE0B3;
-    --accent-wash: #1B2C22;
+    --bg: #0A1220;
+    --surface: #0F1B2E;
+    --surface-2: #16263F;
+    --ink: #E8EEF7;
+    --ink-muted: #93A5C4;
+    --ink-faint: #5C7089;
+    --border: #1F3350;
+    --accent: #4FA8FF;
+    --accent-ink: #7EC8FF;
+    --accent-wash: #12233C;
+    --prompt-user: #5EEAD4;
+    --prompt-host: #60A5FA;
     --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.35);
     --radius: 8px;
 }
@@ -61,8 +63,8 @@ body {
     line-height: 1.6;
     background-color: var(--bg);
     background-image:
-        linear-gradient(rgba(95, 203, 147, 0.08) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(95, 203, 147, 0.08) 1px, transparent 1px);
+        linear-gradient(rgba(79, 168, 255, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(79, 168, 255, 0.08) 1px, transparent 1px);
     background-size: 32px 32px;
     background-attachment: fixed;
 }
@@ -196,22 +198,26 @@ main {
 
 /*
  * Terminal-style signature, shared by the header brand mark and the
- * mini-prompt partial (/sheets, /about, homepage footer). A single,
- * restrained ink/accent treatment - matching the reference's minimal
- * mono/ink/green palette - replaces the old multi-color rainbow scheme,
- * which was tuned for a dark background and doesn't have enough contrast
- * now that every page (including /sheets) uses the light background.
+ * mini-prompt partial (/sheets, /about, homepage footer). Two-tone
+ * user@host treatment (cyan user, blue host) matching the reference
+ * prompt screenshot - replaces the old single-accent-color version.
  */
 .terminal-prompt {
     font-family: "IBM Plex Mono", ui-monospace, monospace;
 }
 
 .terminal-prompt .prompt-bracket,
-.terminal-prompt .prompt-user,
-.terminal-prompt .prompt-host,
-.terminal-prompt .prompt-dollar,
-.terminal-prompt .prompt-at {
-    color: var(--accent-ink);
+.terminal-prompt .prompt-at,
+.terminal-prompt .prompt-dollar {
+    color: var(--ink-muted);
+}
+
+.terminal-prompt .prompt-user {
+    color: var(--prompt-user);
+}
+
+.terminal-prompt .prompt-host {
+    color: var(--prompt-host);
 }
 
 .terminal-prompt .prompt-cursor {
@@ -240,13 +246,29 @@ main {
 }
 
 /*
- * Home hero. A plain, light section - like the reference's own header.top -
- * with no card/box around the text column, so it reads as part of the same
- * page as everything else instead of a separate dark panel.
+ * Home page: header, hero and footer all sit directly on the page's own
+ * background (the grid pattern from body/html, see above) - no separate
+ * "header bar" or "hero panel" fill color - and the hero copy+photo sit
+ * vertically centered in whatever space is left between the header and
+ * the footer, instead of being pinned near the top.
  */
+body.home-page {
+    display: flex;
+    flex-direction: column;
+}
+
+body.home-page > .site-header {
+    background: transparent;
+    border-bottom-color: transparent;
+}
+
 .landing-main {
     max-width: none;
-    background: var(--bg);
+    margin: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     padding: 48px min(6vw, 56px) 56px;
 }
 
@@ -255,6 +277,7 @@ main {
     grid-template-columns: minmax(300px, 640px) 1fr;
     align-items: stretch;
     gap: 48px;
+    width: 100%;
     max-width: 1100px;
     margin: 0 auto;
     min-height: clamp(280px, 34vw, 420px);
@@ -270,17 +293,26 @@ main {
 }
 
 .hero-photo {
-    /* ?v=3 cache-busts this specific image at the CDN/browser level - the
+    /* ?v=N cache-busts this specific image at the CDN/browser level - the
        filename never changes when the photo is swapped, and this asset is
        served with a 7-day Cache-Control, so without a version bump here a
        previously-cached copy can keep showing after a photo change even
        past a hard refresh (the CDN edge cache isn't cleared by that). */
-    background-image: url("/images/home-hero-bg.jpg?v=4");
+    background-image: url("/images/home-hero-space.jpg?v=1");
     background-size: cover;
     background-position: center;
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    filter: brightness(0.5);
+}
+
+.hero-kicker {
+    margin: 0;
+    color: var(--accent-ink);
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
 }
 
 .hero-title {
