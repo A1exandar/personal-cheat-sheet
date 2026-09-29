@@ -298,7 +298,7 @@ body.home-page > .site-header {
        served with a 7-day Cache-Control, so without a version bump here a
        previously-cached copy can keep showing after a photo change even
        past a hard refresh (the CDN edge cache isn't cleared by that). */
-    background-image: url("/images/home-hero-space.jpg?v=1");
+    background-image: url("/images/home-hero-space.png?v=1");
     background-size: cover;
     background-position: center;
     border: 1px solid var(--border);
@@ -767,14 +767,17 @@ a:hover {
     box-shadow: var(--shadow);
     color: inherit;
     text-decoration: none;
-    transition: background-color 0.15s ease, border-color 0.15s ease;
+    transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .sheet-card:hover,
 .sheet-card:focus-visible {
     background: var(--surface-2);
-    border-color: var(--ink-faint);
-    border-left-color: var(--accent, #58e0c1);
+    border-color: var(--accent, #58e0c1);
+    /* Glowing edge in the card's own accent color (the same one used for
+       its left-edge stripe, set per-card by the nth-child cycle below) -
+       a tight bright layer plus a wider soft layer for the glow itself. */
+    box-shadow: var(--shadow), 0 0 0 1px var(--accent, #58e0c1), 0 0 18px 2px var(--accent, #58e0c1);
 }
 
 .sheet-card:focus-visible {
