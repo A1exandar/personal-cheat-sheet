@@ -45,7 +45,7 @@ ls -l /run/php/php8.1-fpm.sock               # confirm the socket exists
 ```bash
 sudo systemctl restart php8.1-fpm                          # restart the pool
 grep fastcgi_pass /etc/nginx/sites-available/example.com   # confirm it matches the socket above
-sudo nginx -t && sudo systemctl reload nginx
+sudo nginx -t && sudo systemctl reload nginx               # validate the config, then reload if it passes
 ```
 
 > If PHP-FPM keeps dying under load, raise `pm.max_children` in `/etc/php/8.1/fpm/pool.d/www.conf` rather than just restarting on repeat.
@@ -60,7 +60,7 @@ Likely cause:
 - PHP-FPM has no free workers left, so the request queues until it times out
 
 ```bash
-grep fastcgi_read_timeout /etc/nginx/sites-available/example.com /etc/nginx/nginx.conf
+grep fastcgi_read_timeout /etc/nginx/sites-available/example.com /etc/nginx/nginx.conf   # check the current timeout value
 tail -f /var/log/nginx/error.log         # watch it live while you reproduce the slow page
 wp cron event list --due-now              # is a heavy cron job the trigger?
 ```
@@ -74,7 +74,7 @@ fastcgi_read_timeout 120s;
 request_terminate_timeout = 120s
 ```
 ```bash
-sudo nginx -t && sudo systemctl reload nginx
+sudo nginx -t && sudo systemctl reload nginx   # validate the config, then reload if it passes
 ```
 
 > Treat a timeout as a symptom, not the disease — find the slow query or external call first, then raise the ceiling only if it's genuinely needed.
@@ -88,8 +88,8 @@ Likely cause:
 - PHP's `upload_max_filesize` or `post_max_size` caps it before Nginx even matters
 
 ```bash
-grep client_max_body_size /etc/nginx/nginx.conf /etc/nginx/sites-available/example.com
-php -i | grep -E 'upload_max_filesize|post_max_size'
+grep client_max_body_size /etc/nginx/nginx.conf /etc/nginx/sites-available/example.com   # check nginx's own upload limit
+php -i | grep -E 'upload_max_filesize|post_max_size'   # check PHP's own upload limits
 ```
 
 ```nginx
@@ -102,7 +102,7 @@ upload_max_filesize = 64M
 post_max_size = 64M
 ```
 ```bash
-sudo systemctl reload nginx && sudo systemctl restart php8.1-fpm
+sudo systemctl reload nginx && sudo systemctl restart php8.1-fpm   # apply both the nginx and php.ini changes
 ```
 
 > `post_max_size` must be ≥ `upload_max_filesize`, and Nginx's limit must be ≥ both, or the smallest one wins silently.
@@ -120,13 +120,13 @@ Likely cause:
 
 ```bash
 namei -l /var/www/example.com/index.php                        # traces permissions on every segment of the path
-sudo -u www-data test -r /var/www/example.com/index.php && echo readable
+sudo -u www-data test -r /var/www/example.com/index.php && echo readable   # confirm the PHP-FPM user can read it
 ```
 
 ```bash
 sudo chown -R www-data:www-data /var/www/example.com           # or your configured PHP-FPM user
-sudo find /var/www/example.com -type d -exec chmod 755 {} \;
-sudo find /var/www/example.com -type f -exec chmod 644 {} \;
+sudo find /var/www/example.com -type d -exec chmod 755 {} \;   # directories: rwxr-xr-x
+sudo find /var/www/example.com -type f -exec chmod 644 {} \;   # files: rw-r--r--
 ```
 
 > WordPress needs `wp-content`, its uploads folder, and `wp-config.php` writable by the PHP-FPM user for updates and media — don't `chmod 777` to "fix" this.
@@ -140,7 +140,7 @@ Likely cause:
 - Leftover `.htaccess` rewrite rules were copied over — Nginx ignores `.htaccess` entirely
 
 ```bash
-grep -A2 'location /' /etc/nginx/sites-available/example.com
+grep -A2 'location /' /etc/nginx/sites-available/example.com   # see the current location / block, and what follows it
 ```
 
 ```nginx
@@ -150,7 +150,7 @@ location / {
 }
 ```
 ```bash
-sudo nginx -t && sudo systemctl reload nginx
+sudo nginx -t && sudo systemctl reload nginx   # validate the config, then reload if it passes
 ```
 
 > Then in WordPress: **Settings → Permalinks → Save**, to flush rewrite rules against the new server.
@@ -164,13 +164,13 @@ Likely cause:
 - Disk is actually full (see [Server disk full](#server-disk-full) below)
 
 ```bash
-sudo -u www-data test -w /var/www/example.com/wp-content/uploads && echo writable
-df -h /var/www
+sudo -u www-data test -w /var/www/example.com/wp-content/uploads && echo writable   # confirm the PHP-FPM user can write there
+df -h /var/www   # confirm the volume isn't actually full
 ```
 
 ```bash
-sudo chown -R www-data:www-data /var/www/example.com/wp-content/uploads
-sudo find /var/www/example.com/wp-content/uploads -type d -exec chmod 755 {} \;
+sudo chown -R www-data:www-data /var/www/example.com/wp-content/uploads   # fix ownership on the uploads dir
+sudo find /var/www/example.com/wp-content/uploads -type d -exec chmod 755 {} \;   # fix directory permissions recursively
 ```
 
 ## Application & Data
@@ -185,7 +185,7 @@ Likely cause:
 - A plugin or theme update introduced an incompatibility
 
 ```bash
-tail -n 50 /var/log/php8.1-fpm.log
+tail -n 50 /var/log/php8.1-fpm.log   # check PHP-FPM's own error log first
 tail -n 50 /var/www/example.com/wp-content/debug.log   # if WP_DEBUG_LOG is enabled in wp-config.php
 ```
 
@@ -210,13 +210,13 @@ Likely cause:
 - Too many connections — the DB hit `max_connections` and is refusing new ones
 
 ```bash
-systemctl status mysql
-mysqladmin ping -u wp_user -p
-grep -E 'DB_NAME|DB_USER|DB_HOST' /var/www/example.com/wp-config.php
+systemctl status mysql   # is the database service running?
+mysqladmin ping -u wp_user -p   # can this DB user actually authenticate?
+grep -E 'DB_NAME|DB_USER|DB_HOST' /var/www/example.com/wp-config.php   # confirm wp-config.php points at the right DB
 ```
 
 ```bash
-sudo systemctl restart mysql
+sudo systemctl restart mysql   # restart the database service
 mysql -u wp_user -p -h 127.0.0.1 wp_database -e 'SELECT 1;'   # confirm the app user can actually reach the DB
 ```
 
@@ -233,14 +233,14 @@ Likely cause:
 - Old posts have hardcoded `http://` URLs in post content, saved before the migration
 
 ```bash
-wp option get siteurl
-wp option get home
+wp option get siteurl   # check the site's configured base URL
+wp option get home   # check the configured home URL
 ```
 
 ```bash
-wp option update siteurl 'https://example.com'
-wp option update home 'https://example.com'
-wp search-replace 'http://example.com' 'https://example.com' --skip-columns=guid
+wp option update siteurl 'https://example.com'   # switch the site URL option to https
+wp option update home 'https://example.com'   # switch the home option to https
+wp search-replace 'http://example.com' 'https://example.com' --skip-columns=guid   # rewrite hardcoded links in post content
 ```
 
 > Run `search-replace` with `--dry-run` first to see what it would touch before committing.
@@ -254,13 +254,13 @@ Likely cause:
 - The certbot nginx plugin can't find/parse the server block it expects
 
 ```bash
-sudo certbot renew --dry-run
+sudo certbot renew --dry-run   # simulate a renewal without replacing the certificate
 sudo ufw status                     # port 80 must stay reachable for the challenge
 ```
 
 ```bash
-sudo ufw allow 80/tcp
-sudo certbot renew
+sudo ufw allow 80/tcp   # open the port the ACME challenge needs
+sudo certbot renew   # retry now that port 80 is reachable
 systemctl list-timers | grep certbot   # confirm renewal is still checked twice a day, the certbot default
 ```
 
@@ -278,9 +278,9 @@ Likely cause:
 - `pm.max_children` in the PHP-FPM pool is too low for the server's RAM, so requests queue
 
 ```bash
-curl -o /dev/null -s -w 'time_total: %{time_total}s\n' https://example.com/
-php -i | grep opcache.enable
-grep -E 'pm.max_children|pm =' /etc/php/8.1/fpm/pool.d/www.conf
+curl -o /dev/null -s -w 'time_total: %{time_total}s\n' https://example.com/   # measure real page load time
+php -i | grep opcache.enable   # confirm OPcache is actually turned on
+grep -E 'pm.max_children|pm =' /etc/php/8.1/fpm/pool.d/www.conf   # check how many PHP-FPM workers are configured
 ```
 
 ```ini
@@ -293,7 +293,7 @@ opcache.memory_consumption=128
 pm.max_children = 12
 ```
 ```bash
-sudo systemctl restart php8.1-fpm
+sudo systemctl restart php8.1-fpm   # apply the php.ini changes
 ```
 
 > Add a caching plugin (or Nginx `fastcgi_cache`) for logged-out page views before touching anything else — it usually buys the biggest win for the least risk.
@@ -309,14 +309,14 @@ Likely cause:
 - Old backup archives accumulated on the same volume as the site
 
 ```bash
-df -h
-du -sh /var/log/* 2>/dev/null | sort -rh | head -10
-sudo find /var/www -name '*.log' -size +100M
+df -h   # see which filesystem is actually full
+du -sh /var/log/* 2>/dev/null | sort -rh | head -10   # find the biggest log directories
+sudo find /var/www -name '*.log' -size +100M   # find any single oversized log file
 ```
 
 ```bash
-sudo journalctl --vacuum-size=200M
-sudo logrotate -f /etc/logrotate.d/nginx
+sudo journalctl --vacuum-size=200M   # shrink the systemd journal to free space fast
+sudo logrotate -f /etc/logrotate.d/nginx   # force nginx's log rotation right now
 cat /etc/logrotate.d/nginx   # then confirm logrotate actually runs on schedule
 ```
 
@@ -350,7 +350,7 @@ Likely cause:
 
 ```bash
 telnet smtp.your-provider.com 587   # confirm outbound access to an authenticated relay
-wp eval 'var_dump( wp_mail("you@example.com", "test", "body") );'
+wp eval 'var_dump( wp_mail("you@example.com", "test", "body") );'   # test whether wp_mail() actually sends
 ```
 
 ```text
