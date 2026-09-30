@@ -14,6 +14,7 @@
         "hero.description": "Praktische Notizen, Befehle und Lösungen<br>für Linux, Infrastruktur und Automatisierung.",
         "footer.ready": "Bereit.",
         "sheets.description": "Eine persönliche Referenz für häufig verwendete Linux-Befehle und Systemadministrationsaufgaben.",
+        "labs.description": "Praktische Anleitungen und Konfigurations-Walkthroughs für reale Aufgaben, die ich tatsächlich durchgearbeitet habe - größer als ein einzelner Befehl, kleiner als ein vollständiges Projekt.",
 
         "about.body": "<p>Ich bin Aleksandar, ein Linux-Enthusiast mit großem Interesse an technischem Support und Systemadministration.</p>\n<p>Ich lerne gerne, wie Systeme funktionieren, löse praktische Probleme und baue zuverlässige Linux-Workflows für den Alltag auf. Diese Seite ist meine persönliche Referenz für Befehle, Tools und Administrationsnotizen, die ich oft nutze und wieder aufsuche.</p>\n<p>Neben der Technik begeistere ich mich für Fitness und Radfahren. Beides hilft mir, fokussiert, diszipliniert und neugierig zu bleiben - die gleiche Einstellung, die ich beim Lernen und Arbeiten mit Technologie mitbringe.</p>",
 

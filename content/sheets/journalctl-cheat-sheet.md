@@ -105,7 +105,7 @@ sudo journalctl --vacuum-time=2weeks        # delete entries older than 2 weeks
 sudo journalctl --vacuum-files=5            # keep only the 5 most recent journal files
 ```
 
-> An ever-growing journal is a common cause of a full disk on long-running servers (see the [Server disk full](/sheets/wordpress-nginx-troubleshooting-cheat-sheet/#server-disk-full) entry). `--vacuum-size`/`--vacuum-time` are the fast, safe fix; configuring persistent size limits (below) prevents it from recurring.
+> An ever-growing journal is a common cause of a full disk on long-running servers (see the [Server disk full](/labs/wordpress-nginx-troubleshooting-cheat-sheet/#server-disk-full) entry). `--vacuum-size`/`--vacuum-time` are the fast, safe fix; configuring persistent size limits (below) prevents it from recurring.
 
 ## Making the journal persistent (and capping its size)
 
