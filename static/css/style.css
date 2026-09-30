@@ -274,11 +274,11 @@ body.home-page > .site-header {
 
 .landing-hero {
     display: grid;
-    grid-template-columns: minmax(280px, 420px) 1fr;
+    grid-template-columns: minmax(260px, 380px) 1fr;
     align-items: stretch;
-    gap: 48px;
+    gap: 32px;
     width: 100%;
-    max-width: 880px;
+    max-width: 1000px;
     margin: 0 auto;
     min-height: clamp(280px, 34vw, 420px);
 }
@@ -298,7 +298,7 @@ body.home-page > .site-header {
        served with a 7-day Cache-Control, so without a version bump here a
        previously-cached copy can keep showing after a photo change even
        past a hard refresh (the CDN edge cache isn't cleared by that). */
-    background-image: url("/images/home-hero-space.png?v=1");
+    background-image: url("/images/home-hero-space.jpg?v=1");
     background-size: cover;
     background-position: center;
     border: 1px solid var(--border);
