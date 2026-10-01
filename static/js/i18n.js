@@ -42,7 +42,8 @@
         "card.vim-neovim-cheat-sheet.description": "Zentrale modale Vim-Befehle, die in Vim und Neovim identisch funktionieren, plus die tatsächlichen Unterschiede zwischen beiden - Konfigurationsdateien, LSP-Unterstützung und das Plugin-Ökosystem.",
         "card.wordpress-nginx-troubleshooting-cheat-sheet.description": "Runbook von Symptom zu Lösung für WordPress hinter Nginx und PHP-FPM unter Ubuntu: Gateway-Fehler, Berechtigungen, Datenbankprobleme, TLS, Performance und Server-Wartung.",
         "card.monitoring-tools-cheat-sheet.description": "Linux-Systeme überwachen mit htop, glances und netdata für schnelle Checks auf einem einzelnen Host, plus wie Zabbix und Grafana für flottenweites Monitoring und Dashboards ins Bild passen.",
-        "card.users-groups-management-cheat-sheet.description": "Linux-Benutzerkonten und Gruppen erstellen, ändern und löschen: useradd/usermod/userdel, groupadd, Passwortablauf mit chage, Gruppenmitgliedschaft und die Dateien /etc/passwd, /etc/shadow und /etc/group dahinter."
+        "card.users-groups-management-cheat-sheet.description": "Linux-Benutzerkonten und Gruppen erstellen, ändern und löschen: useradd/usermod/userdel, groupadd, Passwortablauf mit chage, Gruppenmitgliedschaft und die Dateien /etc/passwd, /etc/shadow und /etc/group dahinter.",
+        "card.networking-diagnostics-cheat-sheet.description": "Netzwerkprobleme diagnostizieren mit ss, netstat, ping, traceroute und dig/nslookup: ist ein Port offen, ist ein Host erreichbar, wo bricht die Verbindung ab, und löst DNS korrekt auf."
     };
 
     /*
@@ -764,7 +765,48 @@
 
         "# bigger than 100MB AND changed in the last 24 hours": "# größer als 100MB UND in den letzten 24 Stunden geändert",
         "# bigger than 500MB AND changed in the last week": "# größer als 500MB UND in der letzten Woche geändert",
-        "# same, but -xdev stops it crossing into other mounted filesystems": "# dasselbe, aber -xdev verhindert das Überschreiten in andere eingehängte Dateisysteme"
+        "# same, but -xdev stops it crossing into other mounted filesystems": "# dasselbe, aber -xdev verhindert das Überschreiten in andere eingehängte Dateisysteme",
+
+        "# TCP + UDP listening sockets, with process name and PID": "# TCP- und UDP-Listening-Sockets, mit Prozessname und PID",
+        "# established TCP connections only": "# nur bestehende TCP-Verbindungen",
+        "# summary: total sockets by state and protocol": "# Zusammenfassung: Sockets gesamt nach Status und Protokoll",
+        "# is anything listening on port 443?": "# lauscht überhaupt etwas auf Port 443?",
+        "# active SSH connections, with timer info": "# aktive SSH-Verbindungen, mit Timer-Informationen",
+        "# connections stuck in TIME_WAIT": "# Verbindungen, die in TIME_WAIT hängen",
+        "# same idea as ss -tulpn: listening TCP/UDP with process info": "# gleiche Idee wie ss -tulpn: lauschende TCP/UDP mit Prozessinfo",
+        "# all connections, numeric output": "# alle Verbindungen, numerische Ausgabe",
+        "# the routing table, numeric": "# die Routing-Tabelle, numerisch",
+        "# interface statistics - packets, errors, drops": "# Schnittstellen-Statistiken - Pakete, Fehler, Drops",
+        "# send ICMP echo requests until interrupted with Ctrl+C": "# ICMP-Echo-Anfragen senden, bis mit Strg+C unterbrochen",
+        "# send exactly 4 requests, then stop": "# genau 4 Anfragen senden, dann stoppen",
+        "# send every 0.2 seconds instead of the 1-second default": "# alle 0,2 Sekunden senden statt der Standard-1-Sekunde",
+        "# send a larger payload size, useful for MTU troubleshooting": "# eine größere Payload-Größe senden, nützlich für MTU-Fehlersuche",
+        "# classic hop-by-hop path, one pass": "# klassischer Hop-für-Hop-Pfad, ein Durchlauf",
+        "# numeric output - skip reverse DNS on every hop": "# numerische Ausgabe - Reverse-DNS bei jedem Hop überspringen",
+        "# continuous, live-updating traceroute with per-hop loss %": "# fortlaufendes, live aktualisiertes Traceroute mit Verlust-% pro Hop",
+        "# report mode - run 50 cycles, then print a summary and exit": "# Report-Modus - 50 Durchläufe ausführen, dann Zusammenfassung ausgeben und beenden",
+        "# full answer, with the resolving process details": "# vollständige Antwort, mit Details zum Auflösungsvorgang",
+        "# just the resolved IP address(es)": "# nur die aufgelöste(n) IP-Adresse(n)",
+        "# look up a specific record type (MX, TXT, NS, AAAA, ...)": "# einen bestimmten Record-Typ nachschlagen (MX, TXT, NS, AAAA, ...)",
+        "# query a specific DNS server directly, bypassing local resolver settings": "# einen bestimmten DNS-Server direkt abfragen, unter Umgehung der lokalen Resolver-Einstellungen",
+        "# reverse lookup - IP address to hostname": "# Reverse-Lookup - IP-Adresse zu Hostname",
+        "# follow the full resolution chain from the root servers down": "# die vollständige Auflösungskette von den Root-Servern abwärts verfolgen",
+        "# resolve a hostname using the system's configured resolver": "# einen Hostnamen mit dem konfigurierten System-Resolver auflösen",
+        "# resolve using a specific DNS server": "# mit einem bestimmten DNS-Server auflösen",
+        "# look up a specific record type": "# einen bestimmten Record-Typ nachschlagen",
+        "# TCP port check - does anything accept a connection on 443?": "# TCP-Port-Check - nimmt überhaupt etwas Verbindungen auf 443 an?",
+        "# same, for UDP (less reliable - UDP has no connection handshake to confirm)": "# dasselbe für UDP (weniger zuverlässig - UDP hat keinen Verbindungs-Handshake zur Bestätigung)",
+        "# another way to probe a raw TCP port, no nc required": "# ein weiterer Weg, einen rohen TCP-Port zu prüfen, ohne nc",
+        "# pure-bash TCP check, no extra tools needed": "# reiner Bash-TCP-Check, keine zusätzlichen Tools nötig",
+        "# every interface and its assigned IP addresses": "# jede Schnittstelle und ihre zugewiesenen IP-Adressen",
+        "# the routing table": "# die Routing-Tabelle",
+        "# which DNS servers this host is actually configured to use": "# welche DNS-Server dieser Host tatsächlich konfiguriert hat",
+        "# this host's own IP address(es)": "# die eigene(n) IP-Adresse(n) dieses Hosts",
+        "# Is my web server actually listening, locally?": "# Lauscht mein Webserver tatsächlich lokal?",
+        "# Can I reach the server at all, ignoring whether the app is up?": "# Kann ich den Server überhaupt erreichen, unabhängig davon, ob die App läuft?",
+        "# The app is unreachable - is it a network problem or a DNS problem?": "# Die App ist nicht erreichbar - ist es ein Netzwerk- oder ein DNS-Problem?",
+        "# Where exactly does the connection die on a multi-hop path?": "# Wo genau bricht die Verbindung auf einem mehrstufigen Pfad ab?",
+        "# Confirm what DNS server a resolution actually used": "# Bestätigen, welcher DNS-Server bei einer Auflösung tatsächlich verwendet wurde"
     };
 
     var STORAGE_KEY = "site-lang";
