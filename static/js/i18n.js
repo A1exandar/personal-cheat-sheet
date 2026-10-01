@@ -762,6 +762,8 @@
         "# make it immutable - can't be modified, deleted, renamed, or linked, not even by root": "# unveränderlich machen - kann nicht geändert, gelöscht, umbenannt oder verlinkt werden, nicht einmal von root",
         "# remove the immutable flag again": "# das Immutable-Flag wieder entfernen",
         "# check for the immutable attribute before suspecting permissions/ownership": "# auf das Immutable-Attribut prüfen, bevor Berechtigungen/Eigentümerschaft vermutet werden",
+        "# remove the immutable flag - this step can't be skipped": "# das Immutable-Flag entfernen - dieser Schritt ist nicht überspringbar",
+        "# now the normal delete works": "# jetzt funktioniert das normale Löschen",
 
         "# bigger than 100MB AND changed in the last 24 hours": "# größer als 100MB UND in den letzten 24 Stunden geändert",
         "# bigger than 500MB AND changed in the last week": "# größer als 500MB UND in der letzten Woche geändert",

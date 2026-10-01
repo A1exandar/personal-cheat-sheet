@@ -199,6 +199,13 @@ sudo chattr +i file.txt        # make it immutable - can't be modified, deleted,
 sudo chattr -i file.txt         # remove the immutable flag again
 ```
 
+**To actually delete an immutable file**, removing the flag is a required first step - `rm` alone will never work on it, no matter who runs it:
+
+```bash
+sudo chattr -i file.txt   # remove the immutable flag - this step can't be skipped
+rm file.txt                 # now the normal delete works
+```
+
 | Flag | Effect |
 |---|---|
 | `i` | **Immutable** - no modifying, deleting, renaming, or linking the file until the flag is removed, regardless of permissions or ownership |
