@@ -189,7 +189,27 @@ The leading digit is the special-bit sum: SUID = `4`, SGID = `2`, sticky = `1` (
 >
 > **The sticky bit is why `/tmp` works as a shared directory.** Without it, anyone with write access to `/tmp` (i.e. everyone) could delete or rename any other user's temporary files.
 
-## 7. `umask`
+## 7. Immutable and other file attributes (`chattr`/`lsattr`)
+
+`chmod`/`chown` control *who* can access a file. File attributes set with `chattr` work underneath that layer entirely, and can block an action even for `root`.
+
+```bash
+lsattr file.txt              # show the attributes currently set on a file
+sudo chattr +i file.txt        # make it immutable - can't be modified, deleted, renamed, or linked, not even by root
+sudo chattr -i file.txt         # remove the immutable flag again
+```
+
+| Flag | Effect |
+|---|---|
+| `i` | **Immutable** - no modifying, deleting, renaming, or linking the file until the flag is removed, regardless of permissions or ownership |
+| `a` | **Append-only** - can be opened for writing only in append mode, so existing content can't be edited or truncated (useful for logs) |
+| `u` | **Undeletable** - the filesystem tries to preserve the content after deletion, for recovery (support varies by filesystem; don't rely on it as a backup strategy) |
+
+> `rm: cannot remove 'file.txt': Operation not permitted`, on a file where `ls -l` shows you have every permission you need, is the classic sign of the immutable attribute - check `lsattr file.txt` before assuming it's a permissions or ownership problem.
+>
+> `chattr`/`lsattr` only work on filesystems that support extended attributes (ext2/3/4, XFS, Btrfs) - they're a no-op on FAT/exFAT and similar.
+
+## 8. `umask`
 
 `umask` sets the permission bits that are **removed** from the default when a new file or directory is created — it doesn't grant permissions, it subtracts them.
 
@@ -209,7 +229,7 @@ New files start from a base of `666` (`rw-rw-rw-`, never executable by default, 
 
 `022` is a common default (owner can edit, everyone can read). `027`/`077` are stricter choices for shared or sensitive systems where group or other access shouldn't be granted automatically.
 
-## 8. Practical scenarios and troubleshooting
+## 9. Practical scenarios and troubleshooting
 
 **Make a shell script executable:**
 
@@ -260,6 +280,12 @@ namei -l /home/alex/project/deploy.sh
 ```
 This prints the permissions of every component of the path in one pass, making a missing `x` on a parent directory immediately obvious.
 
+**A file won't delete or edit despite correct permissions and ownership:**
+
+```bash
+lsattr /path/to/file   # check for the immutable attribute before suspecting permissions/ownership
+```
+
 **Check ACLs if owner/group/other permissions don't explain the access you're seeing:**
 
 ```bash
@@ -268,7 +294,7 @@ getfacl file.txt
 
 > A `+` at the end of the permission string in `ls -l` output (e.g. `rwxr-x---+`) means the file has an ACL granting additional per-user or per-group permissions beyond the standard three classes. ACLs are an advanced topic beyond this sheet's scope — `getfacl`/`setfacl` are the tools to reach for when standard permissions genuinely aren't enough (e.g. one extra user needs access without changing the file's group).
 
-## 9. Security best practices
+## 10. Security best practices
 
 - **Use least privilege.** Grant only the access actually needed — start narrow and add permissions when a real need appears, rather than starting broad and hoping nothing goes wrong.
 - **Avoid `chmod 777`.** It is almost never the correct fix; if a permission error shows up, find the specific missing bit instead.

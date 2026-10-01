@@ -755,7 +755,16 @@
         "# find any single oversized log file": "# eine einzelne übergroße Log-Datei finden",
         "# shrink the systemd journal to free space fast": "# das systemd-Journal verkleinern, um schnell Platz freizugeben",
         "# force nginx's log rotation right now": "# nginxs Log-Rotation jetzt sofort erzwingen",
-        "# test whether wp_mail() actually sends": "# testen, ob wp_mail() tatsächlich sendet"
+        "# test whether wp_mail() actually sends": "# testen, ob wp_mail() tatsächlich sendet",
+
+        "# show the attributes currently set on a file": "# die aktuell gesetzten Attribute einer Datei anzeigen",
+        "# make it immutable - can't be modified, deleted, renamed, or linked, not even by root": "# unveränderlich machen - kann nicht geändert, gelöscht, umbenannt oder verlinkt werden, nicht einmal von root",
+        "# remove the immutable flag again": "# das Immutable-Flag wieder entfernen",
+        "# check for the immutable attribute before suspecting permissions/ownership": "# auf das Immutable-Attribut prüfen, bevor Berechtigungen/Eigentümerschaft vermutet werden",
+
+        "# bigger than 100MB AND changed in the last 24 hours": "# größer als 100MB UND in den letzten 24 Stunden geändert",
+        "# bigger than 500MB AND changed in the last week": "# größer als 500MB UND in der letzten Woche geändert",
+        "# same, but -xdev stops it crossing into other mounted filesystems": "# dasselbe, aber -xdev verhindert das Überschreiten in andere eingehängte Dateisysteme"
     };
 
     var STORAGE_KEY = "site-lang";

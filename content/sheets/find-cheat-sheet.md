@@ -58,6 +58,24 @@ find /tmp -mmin -15        # modified in the last 15 minutes
 
 `-mtime` counts 24-hour periods; `-mmin` counts minutes. Related: `-atime` (accessed), `-ctime` (metadata changed).
 
+## Large files modified recently
+
+Combine `-size` and `-mtime` to answer the classic "what suddenly ate my disk space" question - big files, filtered down to the ones that actually changed recently:
+
+```bash
+find / -type f -size +100M -mtime -1               # bigger than 100MB AND changed in the last 24 hours
+find /var -type f -size +500M -mtime -7             # bigger than 500MB AND changed in the last week
+find / -xdev -type f -size +100M -mtime -1           # same, but -xdev stops it crossing into other mounted filesystems
+```
+
+To see them sorted biggest-first instead of just listed:
+
+```bash
+find / -type f -size +100M -mtime -7 -printf '%s %p\n' 2>/dev/null | sort -rn | head -20
+```
+
+`-printf '%s %p\n'` prints size in bytes followed by the path for each match; `sort -rn` then orders by that size, descending.
+
 ## Search by owner
 
 ```bash
