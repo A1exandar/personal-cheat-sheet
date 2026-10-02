@@ -1,7 +1,7 @@
 +++
 title = "Users & Groups Management Cheat Sheet"
 date = 2026-09-30
-description = "Create, modify and delete Linux user accounts and groups: useradd/usermod/userdel, groupadd, password aging with chage, group membership, and the /etc/passwd, /etc/shadow and /etc/group files behind it all."
+description = "Create, modify and delete Linux user accounts and groups, understand root vs. admin vs. ordinary users, switch accounts with su, run admin tasks with sudo, and manage /etc/sudoers - plus password aging with chage and the /etc/passwd, /etc/shadow and /etc/group files behind it all."
 tags = ["linux", "users", "groups", "sysadmin"]
 +++
 
@@ -120,23 +120,90 @@ w                                     # who's logged in, plus what they're curre
 last                                    # login history (reads /var/log/wtmp)
 ```
 
-## Switching users and sudo basics
+## Understanding the root user
+
+`root` is UID `0` - the one account that bypasses standard permission checks entirely. Where every other user is stopped by `rwx` bits, ownership, ACLs and the like, `root` simply isn't subject to them. In practice that means `root` can:
+
+- Read, write, or delete **any** file on the system, regardless of its permissions or owner
+- Install, remove, or reconfigure any package or service
+- Create, modify, or delete any user or group - including locking everyone else out
+- Kill or control any process, from any user
+- Mount/unmount filesystems, change network configuration, load kernel modules
+
+```bash
+id root            # uid=0(root) gid=0(root) groups=0(root) - the 0 is what actually matters, not the name
+ls -ld /root          # root's home directory - /root, not /home/root
+```
+
+There's nothing magic about the *username* "root" - any account with UID 0 has exactly this power, which is itself a common attack/misconfiguration vector worth knowing about (`awk -F: '$3 == 0 {print $1}' /etc/passwd` should normally print only `root`).
+
+> Logging in directly as root (vs. using `sudo` from a named account) throws away accountability - there's no record of *which human* did something, just that "root" did it. Most modern distributions disable root's password/direct login by default for exactly this reason, and expect admin work to go through `sudo` instead.
+
+## Understanding an admin-rights user
+
+An "admin" or "sudoer" is an **ordinary user account** (not UID 0) that has been explicitly granted permission to run some or all commands as root, almost always by being added to a specific group:
+
+```bash
+sudo usermod -aG sudo alex        # Debian/Ubuntu - the group that grants sudo access
+sudo usermod -aG wheel alex         # RHEL/Fedora/CentOS - the equivalent group there
+```
+
+```bash
+groups alex          # does alex actually have sudo/wheel in their group list?
+getent group sudo      # who is currently in the sudo group?
+sudo -l -U alex           # exactly what commands alex is allowed to run, and as whom
+```
+
+Key differences from being root outright:
+
+- An admin user's **everyday session has no special privileges** - they only get them by explicitly invoking `sudo` for a specific command (or `sudo -i` for a full root shell).
+- `sudo` prompts for **the admin's own password**, not root's - every use is tied to a specific person and (by default) logged to `/var/log/auth.log` or the systemd journal.
+- Admin rights can be **scoped precisely** rather than all-or-nothing - a `sudoers` entry can permit exactly one command instead of everything (see "Managing sudo configuration" below).
+
+An **ordinary user** with no `sudo`/`wheel` membership and no `sudoers` entry has none of this - they can read/write their own home directory and whatever a plain group membership grants them, but can't install software, edit system configuration, manage services, or administer other accounts at all.
+
+## Switching user with `su`
 
 ```bash
 su - alex               # switch to alex, loading their full login environment (the - matters)
-su alex                   # switch but keep the current shell environment - usually not what you want
-sudo -i                     # get a root login shell, with root's own environment
-sudo -u alex whoami           # run a single command as another user, then return
-sudo -l                         # list what the current user is allowed to run with sudo
-sudo visudo                        # safely edit /etc/sudoers - validates syntax before saving
+su alex                   # switch but keep the current shell's environment - usually not what you want
+su -                        # switch to root - prompts for ROOT'S OWN password, not yours
+su -c 'whoami' alex            # run a single command as alex without starting an interactive shell
+exit                              # return to the previous user/session
+```
+
+`su`'s defining quirk versus `sudo`: it asks for **the target account's password**. `su -` to root requires knowing root's password - which is exactly why disabling root's password (common on Ubuntu and similar) effectively disables `su` to root too, pushing everyone through `sudo` instead, where they only ever need to know their own.
+
+## Performing admin tasks with sudo
+
+```bash
+sudo systemctl restart nginx     # run one command as root, authenticating with YOUR OWN password
+sudo -i                              # get a full root login shell, with root's own environment
+sudo -u alex whoami                    # run a single command as a different (non-root) user
+sudo -l                                   # list what the current user is allowed to run
+sudo -k                                      # forget the cached credential - next sudo asks for a password again
+sudo !!                                         # re-run the previous command with sudo prepended
+```
+
+By default, `sudo` caches a successful authentication for a few minutes (15 by default) so you aren't re-prompted for every single command in a short burst of admin work - `sudo -k` clears that cache immediately, useful before stepping away from a terminal.
+
+## Managing sudo configuration
+
+```bash
+sudo visudo                              # safely edit /etc/sudoers - validates syntax before saving
+sudo visudo -f /etc/sudoers.d/alex         # edit a dedicated drop-in file instead (generally preferable)
 ```
 
 ```text
-# a typical /etc/sudoers line, added via visudo
-alex ALL=(ALL) NOPASSWD: /usr/bin/systemctl restart nginx
+# /etc/sudoers syntax: user   host = (run-as-user:run-as-group)   commands
+alex    ALL=(ALL:ALL) ALL                                       # alex can run anything as anyone, password required
+alex    ALL=(ALL) NOPASSWD: /usr/bin/systemctl restart nginx       # alex can restart nginx specifically, no password
+%sudo   ALL=(ALL:ALL) ALL                                           # anyone in the sudo group gets full admin rights
 ```
 
-`visudo` locks the file and checks syntax before writing it back - editing `/etc/sudoers` directly with a normal editor risks a typo that locks out `sudo` for everyone, including you.
+`visudo` locks the file and checks syntax before writing it back - editing `/etc/sudoers` directly with a normal editor risks a typo that locks `sudo` out for everyone, including you, with no easy way back in short of single-user mode or a root console.
+
+> Prefer a drop-in file under `/etc/sudoers.d/` over editing the main file directly for one-off grants - a mistake there only affects that file, while a broken main `/etc/sudoers` can break `sudo` system-wide. Either way, always go through `visudo`/`visudo -f`, never a plain text editor.
 
 ## Password aging and account expiry
 

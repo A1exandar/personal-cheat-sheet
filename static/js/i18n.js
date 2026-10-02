@@ -42,7 +42,7 @@
         "card.vim-neovim-cheat-sheet.description": "Zentrale modale Vim-Befehle, die in Vim und Neovim identisch funktionieren, plus die tatsächlichen Unterschiede zwischen beiden - Konfigurationsdateien, LSP-Unterstützung und das Plugin-Ökosystem.",
         "card.wordpress-nginx-troubleshooting-cheat-sheet.description": "Runbook von Symptom zu Lösung für WordPress hinter Nginx und PHP-FPM unter Ubuntu: Gateway-Fehler, Berechtigungen, Datenbankprobleme, TLS, Performance und Server-Wartung.",
         "card.monitoring-tools-cheat-sheet.description": "Linux-Systeme überwachen mit htop, glances und netdata für schnelle Checks auf einem einzelnen Host, plus wie Zabbix und Grafana für flottenweites Monitoring und Dashboards ins Bild passen.",
-        "card.users-groups-management-cheat-sheet.description": "Linux-Benutzerkonten und Gruppen erstellen, ändern und löschen: useradd/usermod/userdel, groupadd, Passwortablauf mit chage, Gruppenmitgliedschaft und die Dateien /etc/passwd, /etc/shadow und /etc/group dahinter.",
+        "card.users-groups-management-cheat-sheet.description": "Linux-Benutzerkonten und Gruppen erstellen, ändern und löschen, root- vs. Admin- vs. normale Benutzer verstehen, mit su zwischen Konten wechseln, Admin-Aufgaben mit sudo ausführen und /etc/sudoers verwalten - plus Passwortablauf mit chage und die Dateien /etc/passwd, /etc/shadow und /etc/group dahinter.",
         "card.networking-diagnostics-cheat-sheet.description": "Netzwerkprobleme diagnostizieren mit ss, netstat, ping, traceroute und dig/nslookup: ist ein Port offen, ist ein Host erreichbar, wo bricht die Verbindung ab, und löst DNS korrekt auf."
     };
 
@@ -779,6 +779,24 @@
         "# restrict access before enabling it - it can contain sensitive memory contents": "# Zugriff einschränken, bevor sie aktiviert wird - kann sensible Speicherinhalte enthalten",
         "# format it as swap": "# als Swap formatieren",
         "# activate it": "# aktivieren",
+
+        "# uid=0(root) gid=0(root) groups=0(root) - the 0 is what actually matters, not the name": "# uid=0(root) gid=0(root) groups=0(root) - die 0 ist entscheidend, nicht der Name",
+        "# root's home directory - /root, not /home/root": "# Home-Verzeichnis von root - /root, nicht /home/root",
+        "# Debian/Ubuntu - the group that grants sudo access": "# Debian/Ubuntu - die Gruppe, die sudo-Zugriff gewährt",
+        "# RHEL/Fedora/CentOS - the equivalent group there": "# RHEL/Fedora/CentOS - die entsprechende Gruppe dort",
+        "# does alex actually have sudo/wheel in their group list?": "# hat alex sudo/wheel tatsächlich in der Gruppenliste?",
+        "# who is currently in the sudo group?": "# wer ist aktuell in der sudo-Gruppe?",
+        "# exactly what commands alex is allowed to run, and as whom": "# genau welche Befehle alex ausführen darf, und als wer",
+        "# switch but keep the current shell's environment - usually not what you want": "# wechseln, aber die aktuelle Shell-Umgebung behalten - meist nicht das Gewünschte",
+        "# switch to root - prompts for ROOT'S OWN password, not yours": "# zu root wechseln - fragt nach ROOTS EIGENEM Passwort, nicht dem eigenen",
+        "# run a single command as alex without starting an interactive shell": "# einen einzelnen Befehl als alex ausführen, ohne eine interaktive Shell zu starten",
+        "# return to the previous user/session": "# zur vorherigen Benutzer-/Sitzung zurückkehren",
+        "# run one command as root, authenticating with YOUR OWN password": "# einen Befehl als root ausführen, authentifiziert mit dem EIGENEN Passwort",
+        "# get a full root login shell, with root's own environment": "# eine vollständige root-Login-Shell mit roots eigener Umgebung erhalten",
+        "# run a single command as a different (non-root) user": "# einen einzelnen Befehl als anderer (Nicht-root-)Benutzer ausführen",
+        "# forget the cached credential - next sudo asks for a password again": "# die zwischengespeicherten Anmeldedaten vergessen - der nächste sudo-Aufruf fragt wieder nach einem Passwort",
+        "# re-run the previous command with sudo prepended": "# den vorherigen Befehl mit vorangestelltem sudo erneut ausführen",
+        "# edit a dedicated drop-in file instead (generally preferable)": "# stattdessen eine dedizierte Drop-in-Datei bearbeiten (im Allgemeinen vorzuziehen)",
 
         "# bigger than 100MB AND changed in the last 24 hours": "# größer als 100MB UND in den letzten 24 Stunden geändert",
         "# bigger than 500MB AND changed in the last week": "# größer als 500MB UND in der letzten Woche geändert",
