@@ -44,7 +44,8 @@
         "card.monitoring-tools-cheat-sheet.description": "Linux-Systeme überwachen mit htop, glances und netdata für schnelle Checks auf einem einzelnen Host, plus wie Zabbix und Grafana für flottenweites Monitoring und Dashboards ins Bild passen.",
         "card.users-groups-management-cheat-sheet.description": "Linux-Benutzerkonten und Gruppen erstellen, ändern und löschen, root- vs. Admin- vs. normale Benutzer verstehen, mit su zwischen Konten wechseln, Admin-Aufgaben mit sudo ausführen und /etc/sudoers verwalten - plus Passwortablauf mit chage und die Dateien /etc/passwd, /etc/shadow und /etc/group dahinter.",
         "card.networking-diagnostics-cheat-sheet.description": "Netzwerkprobleme diagnostizieren mit ss, netstat, ping, traceroute und dig/nslookup: ist ein Port offen, ist ein Host erreichbar, wo bricht die Verbindung ab, und löst DNS korrekt auf.",
-        "card.github-actions-cheat-sheet.description": "GitHub-Actions-Workflows schreiben und verwalten: Trigger, Jobs, Steps, Secrets, Matrix-Builds und Caching, plus die gh-CLI-Befehle, um Läufe im Terminal zu beobachten, erneut auszuführen und zu debuggen."
+        "card.github-actions-cheat-sheet.description": "GitHub-Actions-Workflows schreiben und verwalten: Trigger, Jobs, Steps, Secrets, Matrix-Builds und Caching, plus die gh-CLI-Befehle, um Läufe im Terminal zu beobachten, erneut auszuführen und zu debuggen.",
+        "card.hardening-a-fresh-linux-server.description": "Eine praktische Hardening-Checkliste für einen frisch bereitgestellten Ubuntu/Debian-Server: Benutzer und SSH, Firewall und fail2ban, automatische Updates, Zeitsynchronisation, Kernel-/Netzwerk-Tuning und die Fehler, die einen aussperren."
     };
 
     /*
@@ -878,7 +879,53 @@
         "# Can I reach the server at all, ignoring whether the app is up?": "# Kann ich den Server überhaupt erreichen, unabhängig davon, ob die App läuft?",
         "# The app is unreachable - is it a network problem or a DNS problem?": "# Die App ist nicht erreichbar - ist es ein Netzwerk- oder ein DNS-Problem?",
         "# Where exactly does the connection die on a multi-hop path?": "# Wo genau bricht die Verbindung auf einem mehrstufigen Pfad ab?",
-        "# Confirm what DNS server a resolution actually used": "# Bestätigen, welcher DNS-Server bei einer Auflösung tatsächlich verwendet wurde"
+        "# Confirm what DNS server a resolution actually used": "# Bestätigen, welcher DNS-Server bei einer Auflösung tatsächlich verwendet wurde",
+
+        "# Debian/Ubuntu - refresh package lists, then upgrade everything": "# Debian/Ubuntu - Paketlisten aktualisieren, dann alles upgraden",
+        "# if the kernel itself was updated, nothing after this step runs on the old one": "# falls der Kernel selbst aktualisiert wurde, läuft nach diesem Schritt nichts mehr auf dem alten",
+        "# Debian/Ubuntu's interactive wrapper - prompts for a password and full name": "# Debian/Ubuntus interaktiver Wrapper - fragt nach Passwort und vollständigem Namen",
+        "# grant admin rights via the sudo group": "# Admin-Rechte über die sudo-Gruppe gewähren",
+        "# switch into the new account and confirm it works": "# in das neue Konto wechseln und bestätigen, dass es funktioniert",
+        "# should print \"root\" - confirms sudo access actually works": "# sollte \"root\" ausgeben - bestätigt, dass sudo-Zugriff tatsächlich funktioniert",
+        "# on your LOCAL machine, not the server - generates a keypair": "# auf dem LOKALEN Rechner, nicht dem Server - erzeugt ein Schlüsselpaar",
+        "# copies the public key to the server's authorized_keys for you": "# kopiert den öffentlichen Schlüssel für dich in die authorized_keys des Servers",
+        "# from a NEW terminal window - confirm key login works before changing anything server-side": "# aus einem NEUEN Terminal-Fenster - bestätigen, dass der Schlüssel-Login funktioniert, bevor serverseitig etwas geändert wird",
+        "# validate the config syntax before restarting - a typo here can lock out SSH entirely": "# die Konfigurationssyntax vor dem Neustart validieren - ein Tippfehler hier kann SSH vollständig aussperren",
+        "# apply the changes": "# die Änderungen anwenden",
+        "# from yet another new terminal - confirm you can still get in BEFORE closing your existing session": "# aus noch einem weiteren neuen Terminal - bestätigen, dass der Zugang noch funktioniert, BEVOR die bestehende Sitzung geschlossen wird",
+        "# Debian/Ubuntu - usually already installed": "# Debian/Ubuntu - meist schon installiert",
+        "# or: sudo ufw allow 22/tcp - allow SSH BEFORE enabling the firewall": "# oder: sudo ufw allow 22/tcp - SSH erlauben, BEVOR die Firewall aktiviert wird",
+        "# block everything else inbound by default": "# standardmäßig alles andere eingehend blockieren",
+        "# let the server itself make outbound connections freely": "# dem Server selbst uneingeschränkte ausgehende Verbindungen erlauben",
+        "# turn it on - confirms you want this, since it can disconnect you": "# einschalten - fragt zur Bestätigung nach, da es die Verbindung trennen kann",
+        "# confirm SSH is actually in the allowed list": "# bestätigen, dass SSH tatsächlich in der Erlaubnisliste steht",
+        "# RHEL/Fedora equivalent, firewalld": "# RHEL/Fedora-Äquivalent, firewalld",
+        "# enable on boot and start now": "# beim Booten aktivieren und jetzt starten",
+        "# /etc/fail2ban/jail.local - create this file rather than editing jail.conf directly": "# /etc/fail2ban/jail.local - diese Datei anlegen, statt jail.conf direkt zu bearbeiten",
+        "# confirm the sshd jail is active and see current ban count": "# bestätigen, dass die sshd-Jail aktiv ist, und die aktuelle Anzahl an Bans sehen",
+        "# interactive prompt to enable it": "# interaktive Abfrage zur Aktivierung",
+        "# confirm it's actually enabled (both values should be \"1\")": "# bestätigen, dass es tatsächlich aktiviert ist (beide Werte sollten \"1\" sein)",
+        "# confirm NTP sync is active": "# bestätigen, dass die NTP-Synchronisierung aktiv ist",
+        "# the default lightweight client on most modern distros": "# der standardmäßige, schlanke Client auf den meisten modernen Distributionen",
+        "# a more configurable alternative if timesyncd isn't already covering it": "# eine konfigurierbarere Alternative, falls timesyncd nicht bereits ausreicht",
+        "# re-check after switching": "# nach dem Wechsel erneut prüfen",
+        "# apply immediately without a reboot": "# sofort anwenden, ohne Neustart",
+        "# spot-check one value took effect": "# stichprobenartig prüfen, ob ein Wert übernommen wurde",
+        "# lock any default system account that doesn't need interactive login": "# jedes Standard-Systemkonto sperren, das keinen interaktiven Login benötigt",
+        "# confirm root is the ONLY account with UID 0": "# bestätigen, dass root das EINZIGE Konto mit UID 0 ist",
+        "# enforce password complexity for any account that still uses one": "# Passwortkomplexität für jedes Konto erzwingen, das noch eines verwendet",
+        "# what's actually listening, and on which interface": "# was tatsächlich lauscht, und auf welcher Schnittstelle",
+        "# every service currently running": "# jeder aktuell laufende Dienst",
+        "# fully remove a package you don't recognize/need, including its config": "# ein unbekanntes/nicht benötigtes Paket vollständig entfernen, inklusive Konfiguration",
+        "# stop a service and prevent it starting again on boot": "# einen Dienst stoppen und verhindern, dass er beim Booten erneut startet",
+        "# RHEL ships this enabled by default": "# RHEL liefert dies standardmäßig aktiviert aus",
+        "# watch for writes/attribute changes to /etc/passwd": "# auf Schreib-/Attributänderungen an /etc/passwd achten",
+        "# review matching events later": "# passende Ereignisse später überprüfen",
+        "# firewall rules as actually applied": "# tatsächlich angewendete Firewall-Regeln",
+        "# effective SSH config, not just the file on disk": "# effektive SSH-Konfiguration, nicht nur die Datei auf der Platte",
+        "# fail2ban jail is live": "# fail2ban-Jail ist aktiv",
+        "# NTP sync is active": "# NTP-Synchronisierung ist aktiv",
+        "# final listening-ports sanity check": "# abschließende Plausibilitätsprüfung der lauschenden Ports"
     };
 
     var STORAGE_KEY = "site-lang";
