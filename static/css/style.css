@@ -354,6 +354,18 @@ body.home-page > .site-header {
     height: auto;
 }
 
+/* Same pink-orange-yellow gradient as the "A1ex@ndar" wordmark SVG above
+   it, reused as a text effect for a one-off highlighted phrase in the
+   /about bio (currently "but in love with Arch" / "aber verliebt in
+   Arch") - colors sampled directly from that file's fill values. */
+.chroma-highlight {
+    background-image: linear-gradient(90deg, #d955d3, #df62bb, #ea748e, #f18a68, #f5a347, #f7b932, #f9ca2d, #f4de44);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    font-weight: 600;
+}
+
 .about-article {
     --about-media-width: 220px;
 }
