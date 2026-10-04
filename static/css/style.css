@@ -43,8 +43,10 @@
     --accent: #4FA8FF;
     --accent-ink: #7EC8FF;
     --accent-wash: #12233C;
-    --prompt-user: #5EEAD4;
-    --prompt-host: #60A5FA;
+    --prompt-user: #F0C419;
+    --prompt-at: #E08FD0;
+    --prompt-host: #93B4F5;
+    --prompt-cursor: #A6E22E;
     --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.35);
     --radius: 8px;
 }
@@ -198,22 +200,25 @@ main {
 
 /*
  * Terminal-style signature, shared by the header brand mark and the
- * mini-prompt partial (/sheets, /about, homepage footer). Two-tone
- * user@host treatment (cyan user, blue host) matching the reference
- * prompt screenshot - replaces the old single-accent-color version.
+ * mini-prompt partial (/sheets, /about, homepage footer). Retro-terminal
+ * palette matching a reference prompt screenshot: yellow user, pink @,
+ * light-blue host, lime-green cursor block.
  */
 .terminal-prompt {
     font-family: "IBM Plex Mono", ui-monospace, monospace;
 }
 
 .terminal-prompt .prompt-bracket,
-.terminal-prompt .prompt-at,
 .terminal-prompt .prompt-dollar {
     color: var(--ink-muted);
 }
 
 .terminal-prompt .prompt-user {
     color: var(--prompt-user);
+}
+
+.terminal-prompt .prompt-at {
+    color: var(--prompt-at);
 }
 
 .terminal-prompt .prompt-host {
@@ -225,7 +230,7 @@ main {
     width: 0.5em;
     height: 1em;
     margin-left: 0.15em;
-    border: 0.09em solid var(--accent);
+    border: 0.09em solid var(--prompt-cursor);
     vertical-align: -0.15em;
     animation: prompt-cursor-blink 1.1s steps(1) infinite;
 }
