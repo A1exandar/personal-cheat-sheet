@@ -46,7 +46,8 @@
         "card.users-groups-management-cheat-sheet.description": "Linux-Benutzerkonten und Gruppen erstellen, ändern und löschen, root- vs. Admin- vs. normale Benutzer verstehen, mit su zwischen Konten wechseln, Admin-Aufgaben mit sudo ausführen und /etc/sudoers verwalten - plus Passwortablauf mit chage und die Dateien /etc/passwd, /etc/shadow und /etc/group dahinter.",
         "card.networking-diagnostics-cheat-sheet.description": "Netzwerkprobleme diagnostizieren mit ss, netstat, ping, traceroute und dig/nslookup: ist ein Port offen, ist ein Host erreichbar, wo bricht die Verbindung ab, und löst DNS korrekt auf.",
         "card.github-actions-cheat-sheet.description": "GitHub-Actions-Workflows schreiben und verwalten: Trigger, Jobs, Steps, Secrets, Matrix-Builds und Caching, plus die gh-CLI-Befehle, um Läufe im Terminal zu beobachten, erneut auszuführen und zu debuggen.",
-        "card.hardening-a-fresh-linux-server.description": "Eine praktische Hardening-Checkliste für einen frisch bereitgestellten Ubuntu/Debian-Server: Benutzer und SSH, Firewall und fail2ban, automatische Updates, Zeitsynchronisation, Kernel-/Netzwerk-Tuning und die Fehler, die einen aussperren."
+        "card.hardening-a-fresh-linux-server.description": "Eine praktische Hardening-Checkliste für einen frisch bereitgestellten Ubuntu/Debian-Server: Benutzer und SSH, Firewall und fail2ban, automatische Updates, Zeitsynchronisation, Kernel-/Netzwerk-Tuning und die Fehler, die einen aussperren.",
+        "card.process-management-cheat-sheet.description": "Linux-Prozesse untersuchen und steuern mit ps, top, kill/pkill, nice/renice und /proc: Prozesszustände, Signale, Priorität, Prozessbäume und Job-Control."
     };
 
     /*
@@ -926,7 +927,51 @@
         "# effective SSH config, not just the file on disk": "# effektive SSH-Konfiguration, nicht nur die Datei auf der Platte",
         "# fail2ban jail is live": "# fail2ban-Jail ist aktiv",
         "# NTP sync is active": "# NTP-Synchronisierung ist aktiv",
-        "# final listening-ports sanity check": "# abschließende Plausibilitätsprüfung der lauschenden Ports"
+        "# final listening-ports sanity check": "# abschließende Plausibilitätsprüfung der lauschenden Ports",
+
+        "# every process, BSD-style: user, pid, %cpu, %mem, command": "# alle Prozesse, BSD-Stil: Benutzer, PID, %CPU, %Speicher, Befehl",
+        "# every process, UNIX-style: includes parent PID (PPID)": "# alle Prozesse, UNIX-Stil: enthält die Eltern-PID (PPID)",
+        "# only processes owned by this user": "# nur Prozesse dieses Benutzers",
+        "# only this specific PID": "# nur diese bestimmte PID",
+        "# top 10 processes by CPU usage": "# Top 10 Prozesse nach CPU-Auslastung",
+        "# top 10 processes by memory usage": "# Top 10 Prozesse nach Speicherauslastung",
+        "# pick exactly the columns you want": "# genau die gewünschten Spalten auswählen",
+        "# live-updating process list, sorted by CPU by default": "# live aktualisierte Prozessliste, standardmäßig nach CPU sortiert",
+        "# find zombie processes (state column starts with Z)": "# Zombie-Prozesse finden (Status-Spalte beginnt mit Z)",
+        "# send SIGTERM (15) - ask the process to shut down gracefully": "# SIGTERM (15) senden - den Prozess um ein geordnetes Beenden bitten",
+        "# send SIGKILL (9) - the kernel terminates it immediately, no cleanup": "# SIGKILL (9) senden - der Kernel beendet ihn sofort, ohne Aufräumen",
+        "# list every signal name and number": "# jeden Signalnamen und jede Nummer auflisten",
+        "# send SIGTERM to every process matching the name \"nginx\"": "# SIGTERM an jeden Prozess senden, dessen Name auf \"nginx\" passt",
+        "# SIGKILL every process owned by user alex": "# SIGKILL an jeden Prozess des Benutzers alex senden",
+        "# send SIGTERM to every process named exactly \"firefox\"": "# SIGTERM an jeden Prozess senden, der exakt \"firefox\" heißt",
+        "# start a new process with lower priority (higher niceness = less CPU priority)": "# einen neuen Prozess mit niedrigerer Priorität starten (höhere Niceness = weniger CPU-Priorität)",
+        "# start with higher priority - needs root for negative values": "# mit höherer Priorität starten - benötigt root für negative Werte",
+        "# lower the priority of an already-running process": "# die Priorität eines bereits laufenden Prozesses senken",
+        "# raise it - needs root for negative values": "# sie anheben - benötigt root für negative Werte",
+        "# check a process's current niceness (the \"NI\" column)": "# die aktuelle Niceness eines Prozesses prüfen (die Spalte \"NI\")",
+        "# everything the kernel exposes about this PID": "# alles, was der Kernel über diese PID offenlegt",
+        "# human-readable summary: state, memory, threads, signals": "# menschenlesbare Zusammenfassung: Status, Speicher, Threads, Signale",
+        "# the exact command line it was started with": "# die genaue Befehlszeile, mit der er gestartet wurde",
+        "# symlink to the actual executable on disk": "# Symlink zur tatsächlichen ausführbaren Datei auf der Platte",
+        "# symlink to its current working directory": "# Symlink zu seinem aktuellen Arbeitsverzeichnis",
+        "# every file descriptor (open file, socket, pipe) it holds": "# jeder Dateideskriptor (offene Datei, Socket, Pipe), den er hält",
+        "# every process as a tree, showing parent/child relationships": "# alle Prozesse als Baum, mit Eltern-/Kind-Beziehungen",
+        "# same, with PIDs shown": "# dasselbe, mit angezeigten PIDs",
+        "# just the tree rooted at this PID and its descendants": "# nur der Baum ab dieser PID und ihren Nachkommen",
+        "# ps's own tree view, if pstree isn't installed": "# ps's eigene Baumansicht, falls pstree nicht installiert ist",
+        "# start a command in the background immediately": "# einen Befehl sofort im Hintergrund starten",
+        "# suspend the current foreground job": "# den aktuellen Vordergrund-Job anhalten",
+        "# list jobs in the current shell session": "# Jobs in der aktuellen Shell-Sitzung auflisten",
+        "# bring job 1 back to the foreground": "# Job 1 zurück in den Vordergrund holen",
+        "# resume a suspended job 1, but in the background": "# einen angehaltenen Job 1 fortsetzen, aber im Hintergrund",
+        "# keep running even after the terminal/SSH session closes": "# weiterlaufen, auch nachdem die Terminal-/SSH-Sitzung geschlossen wird",
+        "# detach an already-running background job from this shell": "# einen bereits laufenden Hintergrund-Job von dieser Shell lösen",
+        "# fully detach into a new session, immune to the shell's own signals": "# vollständig in eine neue Sitzung lösen, immun gegen die eigenen Signale der Shell",
+        "# What's using the most CPU right now?": "# Was nutzt gerade am meisten CPU?",
+        "# Find and gracefully stop every process matching a name": "# Jeden Prozess mit passendem Namen finden und geordnet stoppen",
+        "# A process won't die with a normal kill - escalate": "# Ein Prozess stirbt nicht mit einem normalen kill - eskalieren",
+        "# Find what's holding a specific port open, then kill it": "# Finden, was einen bestimmten Port offen hält, und ihn beenden",
+        "# See exactly what a mystery PID actually is": "# Genau herausfinden, was eine mysteriöse PID tatsächlich ist"
     };
 
     var STORAGE_KEY = "site-lang";
