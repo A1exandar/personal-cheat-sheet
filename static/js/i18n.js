@@ -47,7 +47,8 @@
         "card.networking-diagnostics-cheat-sheet.description": "Netzwerkprobleme diagnostizieren mit ss, netstat, ping, traceroute und dig/nslookup: ist ein Port offen, ist ein Host erreichbar, wo bricht die Verbindung ab, und löst DNS korrekt auf.",
         "card.github-actions-cheat-sheet.description": "GitHub-Actions-Workflows schreiben und verwalten: Trigger, Jobs, Steps, Secrets, Matrix-Builds und Caching, plus die gh-CLI-Befehle, um Läufe im Terminal zu beobachten, erneut auszuführen und zu debuggen.",
         "card.hardening-a-fresh-linux-server.description": "Eine praktische Hardening-Checkliste für einen frisch bereitgestellten Ubuntu/Debian-Server: Benutzer und SSH, Firewall und fail2ban, automatische Updates, Zeitsynchronisation, Kernel-/Netzwerk-Tuning und die Fehler, die einen aussperren.",
-        "card.process-management-cheat-sheet.description": "Linux-Prozesse untersuchen und steuern mit ps, top, kill/pkill, nice/renice und /proc: Prozesszustände, Signale, Priorität, Prozessbäume und Job-Control."
+        "card.process-management-cheat-sheet.description": "Linux-Prozesse untersuchen und steuern mit ps, top, kill/pkill, nice/renice und /proc: Prozesszustände, Signale, Priorität, Prozessbäume und Job-Control.",
+        "card.linux-server-running-slow-cheat-sheet.description": "Ein systematischer Triage-Ablauf für einen langsamen Linux-Server: Load Average, dann CPU, Speicher/Swap, Disk-I/O und Netzwerk, mit den Befehlen und Schwellenwerten, um den tatsächlichen Flaschenhals zu finden."
     };
 
     /*
@@ -971,7 +972,38 @@
         "# Find and gracefully stop every process matching a name": "# Jeden Prozess mit passendem Namen finden und geordnet stoppen",
         "# A process won't die with a normal kill - escalate": "# Ein Prozess stirbt nicht mit einem normalen kill - eskalieren",
         "# Find what's holding a specific port open, then kill it": "# Finden, was einen bestimmten Port offen hält, und ihn beenden",
-        "# See exactly what a mystery PID actually is": "# Genau herausfinden, was eine mysteriöse PID tatsächlich ist"
+        "# See exactly what a mystery PID actually is": "# Genau herausfinden, was eine mysteriöse PID tatsächlich ist",
+
+        "# the three numbers at the end: 1, 5, and 15-minute load averages": "# die drei Zahlen am Ende: 1-, 5- und 15-Minuten-Load-Average",
+        "# same numbers, plus the currently-running/total process count": "# dieselben Zahlen, plus die Anzahl aktuell laufender/gesamter Prozesse",
+        "# how many CPU cores this box has - load average means nothing without this": "# wie viele CPU-Kerne diese Maschine hat - ohne das sagt die Load Average nichts aus",
+        "# P sorts by CPU (default) - see Process Management for full key reference": "# P sortiert nach CPU (Standard) - vollständige Tastenreferenz siehe Process Management",
+        "# top 10 CPU consumers as a one-shot snapshot": "# die 10 größten CPU-Verbraucher als Einmal-Schnappschuss",
+        "# per-core CPU breakdown, 5 samples 1 second apart (needs sysstat)": "# CPU-Aufschlüsselung pro Kern, 5 Messungen im Abstand von 1 Sekunde (benötigt sysstat)",
+        "# system-wide CPU/memory/IO summary, same sampling pattern": "# systemweite CPU-/Speicher-/IO-Übersicht, gleiches Abtastmuster",
+        "# total/used/free/available memory and swap, human-readable": "# gesamter/belegter/freier/verfügbarer Speicher und Swap, menschenlesbar",
+        "# the si/so columns: swap-in and swap-out, in KB per second": "# die Spalten si/so: Swap-in und Swap-out, in KB pro Sekunde",
+        "# top 10 memory consumers": "# die 10 größten Speicherverbraucher",
+        "# check whether the OOM killer has already stepped in": "# prüfen, ob der OOM-Killer bereits eingegriffen hat",
+        "# extended per-device stats, 5 samples 1 second apart (needs sysstat)": "# erweiterte Statistiken pro Gerät, 5 Messungen im Abstand von 1 Sekunde (benötigt sysstat)",
+        "# live view, -o shows only processes actually doing I/O right now (needs root)": "# Live-Ansicht, -o zeigt nur Prozesse, die gerade tatsächlich I/O durchführen (benötigt root)",
+        "# out of space entirely? see linux-disk-check - a 100% full filesystem causes its own slowdowns": "# komplett voll? siehe linux-disk-check - ein zu 100% volles Dateisystem verursacht eigene Verlangsamungen",
+        "# quick socket summary - counts by state, useful for spotting pileups": "# schnelle Socket-Übersicht - Anzahl nach Status, nützlich zum Erkennen von Staus",
+        "# how many established TCP connections right now": "# wie viele etablierte TCP-Verbindungen gerade bestehen",
+        "# basic latency/loss check - see Networking Diagnostics for the full toolkit": "# einfache Latenz-/Verlust-Prüfung - vollständiges Werkzeug-Set siehe Networking Diagnostics",
+        "# load vs nproc - busy at all?": "# Load im Verhältnis zu nproc - überhaupt ausgelastet?",
+        "# us/sy/id/wa split tells you CPU vs I/O-wait at a glance": "# die Aufteilung us/sy/id/wa zeigt auf einen Blick CPU vs. I/O-Wartezeit",
+        "# swapping?": "# wird geswappt?",
+        "# if wa was high or swap is active, confirm here": "# wenn wa hoch war oder Swap aktiv ist, hier bestätigen",
+        "# only if 1-4 all looked clean": "# nur falls 1-4 alle unauffällig aussahen",
+        "# One-shot snapshot of everything, before it's too late to catch the spike": "# Einmal-Schnappschuss von allem, bevor es zu spät ist, den Ausschlag zu erfassen",
+        "# Confirm swapping is the cause of a high load average with idle-looking CPU": "# Bestätigen, dass Swapping die Ursache einer hohen Load Average bei scheinbar untätiger CPU ist",
+        "# watch the wa and si/so columns together": "# die Spalten wa und si/so gemeinsam beobachten",
+        "# Find the single process actually responsible, once a resource is identified": "# Den einen tatsächlich verantwortlichen Prozess finden, sobald eine Ressource identifiziert ist",
+        "# CPU": "# CPU",
+        "# memory": "# Speicher",
+        "# disk": "# Disk",
+        "# Capture a few samples in the background to catch an intermittent spike": "# Ein paar Messungen im Hintergrund erfassen, um einen zeitweiligen Ausschlag einzufangen"
     };
 
     var STORAGE_KEY = "site-lang";
