@@ -303,9 +303,15 @@ body.home-page > .site-header {
        served with a 7-day Cache-Control, so without a version bump here a
        previously-cached copy can keep showing after a photo change even
        past a hard refresh (the CDN edge cache isn't cleared by that). */
-    background-image: url("/images/home-hero-space.jpg?v=2");
-    background-size: cover;
+    background-image: url("/images/home-hero-penguin-gold.png?v=1");
+    /* This image is a self-contained framed illustration (its own rounded
+       border baked into the pixels), unlike the old wide space photo - use
+       contain + a matching background-color instead of cover, so the frame
+       is never cropped off on a wider-than-tall container. */
+    background-size: contain;
+    background-repeat: no-repeat;
     background-position: center;
+    background-color: var(--bg);
     border: 1px solid var(--border);
     border-radius: var(--radius);
 }
