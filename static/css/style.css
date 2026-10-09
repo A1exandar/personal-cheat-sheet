@@ -21,10 +21,10 @@
 }
 
 /*
- * Design tokens - dark blue theme (switched from the original green theme
- * 2026-09-29), the site's single theme everywhere: header/nav, the
- * homepage, the about page, individual sheet articles, taxonomy listings,
- * and the /sheets card grid.
+ * Design tokens - black/gold theme (switched from the blue theme 2026-10-09,
+ * which itself replaced the original green theme 2026-09-29), the site's
+ * single theme everywhere: header/nav, the homepage, the about page,
+ * individual sheet articles, taxonomy listings, and the /sheets card grid.
  *
  * The /sheets card grid keeps its original pink/yellow/green/blue accent
  * identity (the six --accent values in the nth-child cycle near the bottom
@@ -33,16 +33,16 @@
  * the rest of the site.
  */
 :root {
-    --bg: #0A1220;
-    --surface: #0F1B2E;
-    --surface-2: #16263F;
-    --ink: #E8EEF7;
-    --ink-muted: #93A5C4;
-    --ink-faint: #5C7089;
-    --border: #1F3350;
-    --accent: #4FA8FF;
-    --accent-ink: #7EC8FF;
-    --accent-wash: #12233C;
+    --bg: #0A0A0A;
+    --surface: #141414;
+    --surface-2: #1E1E1E;
+    --ink: #F5F5F2;
+    --ink-muted: #ADADA3;
+    --ink-faint: #6B6A62;
+    --border: #2B2B24;
+    --accent: #F2C230;
+    --accent-ink: #F6D368;
+    --accent-wash: #2A2210;
     --prompt-user: #F0C419;
     --prompt-at: #E08FD0;
     --prompt-host: #93B4F5;
@@ -65,8 +65,8 @@ body {
     line-height: 1.6;
     background-color: var(--bg);
     background-image:
-        linear-gradient(rgba(79, 168, 255, 0.08) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(79, 168, 255, 0.08) 1px, transparent 1px);
+        linear-gradient(rgba(242, 194, 48, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(242, 194, 48, 0.08) 1px, transparent 1px);
     background-size: 32px 32px;
     background-attachment: fixed;
 }
