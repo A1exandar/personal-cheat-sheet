@@ -199,6 +199,12 @@ body > .site-header {
     opacity: 0.7;
 }
 
+.nav-wrap {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+}
+
 nav {
     display: flex;
     align-items: center;
@@ -219,6 +225,12 @@ nav a:hover {
     text-underline-offset: 3px;
 }
 
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
 /* Client-side EN/DE UI language toggle - see /js/i18n.js */
 .lang-toggle {
     font-family: inherit;
@@ -236,6 +248,40 @@ nav a:hover {
 .lang-toggle:hover {
     color: var(--accent-ink);
     border-color: var(--accent);
+}
+
+/*
+ * Hamburger menu button - hidden on desktop (see .nav-wrap above, where
+ * .nav-wrap's own gap keeps nav/.header-controls apart), shown only below
+ * the 900px breakpoint where it toggles the dropdown version of `nav`
+ * (see that @media block and /js/nav-toggle.js).
+ */
+.nav-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.nav-toggle span {
+    display: block;
+    width: 16px;
+    height: 2px;
+    background: var(--ink-muted);
+    border-radius: 1px;
+}
+
+.nav-toggle:hover span,
+.nav-toggle[aria-expanded="true"] span {
+    background: var(--accent);
 }
 
 main {
@@ -352,17 +398,24 @@ body.home-page > .site-header {
        served with a 7-day Cache-Control, so without a version bump here a
        previously-cached copy can keep showing after a photo change even
        past a hard refresh (the CDN edge cache isn't cleared by that). */
-    background-image: url("/images/home-hero-penguin-gold.png?v=1");
-    /* This image is a self-contained framed illustration (its own rounded
-       border baked into the pixels), unlike the old wide space photo - use
-       contain + a matching background-color instead of cover, so the frame
-       is never cropped off on a wider-than-tall container. */
-    background-size: contain;
+    background-image: url("/images/home-hero-penguin-gold.png?v=2");
+    background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
-    background-color: var(--bg);
-    border: 1px solid var(--border);
     border-radius: var(--radius);
+    /*
+     * The image is a self-contained framed illustration (its own rounded
+     * gold border is baked into the pixels) at a 1064x886 ratio - sizing
+     * this box to that same ratio means background-size:cover never has
+     * to crop or letterbox it, so no second CSS-drawn frame/box appears
+     * around the artwork's own border. align-self:center overrides the
+     * grid's align-items:stretch (which would otherwise force this to the
+     * row's full height and break the ratio).
+     */
+    aspect-ratio: 1064 / 886;
+    align-self: center;
+    /* Soft glow instead of a hard outline - no border, no outer box. */
+    box-shadow: 0 0 60px 12px rgba(242, 194, 48, 0.25);
 }
 
 .hero-kicker {
@@ -475,27 +528,44 @@ body.home-page > .site-header {
         gap: 28px;
     }
 
+    /* Mobile mockup puts the framed illustration above the headline, the
+       reverse of the desktop side-by-side order. */
     .hero-copy {
-        order: 1;
+        order: 2;
     }
 
     .hero-photo {
-        order: 2;
-        height: 220px;
+        order: 1;
+        width: 100%;
     }
 
     /* Below 900px there isn't room for the brand and the nav links side by
-       side without crowding or wrapping mid-word, so they stack instead -
-       same content, same styles, just arranged in two centered rows. */
-    .site-header-inner {
+       side, so the links collapse behind a hamburger button instead (the
+       language toggle stays visible either way) - see .nav-toggle above
+       and /js/nav-toggle.js for the open/close behavior. .site-header
+       already has position:sticky, which is enough to anchor nav's
+       position:absolute below without adding another positioned wrapper. */
+    nav {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
         flex-direction: column;
-        justify-content: center;
-        gap: 8px;
-        padding: 12px 18px;
+        align-items: flex-start;
+        gap: 18px;
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        padding: 18px;
+        z-index: 20;
     }
 
-    nav {
-        gap: 24px;
+    nav.nav-open {
+        display: flex;
+    }
+
+    .nav-toggle {
+        display: inline-flex;
     }
 }
 
