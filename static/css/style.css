@@ -398,24 +398,25 @@ body.home-page > .site-header {
        served with a 7-day Cache-Control, so without a version bump here a
        previously-cached copy can keep showing after a photo change even
        past a hard refresh (the CDN edge cache isn't cleared by that). */
-    background-image: url("/images/home-hero-penguin-gold.png?v=2");
+    background-image: url("/images/home-hero-penguin-gold.png?v=3");
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
     border-radius: var(--radius);
     /*
      * The image is a self-contained framed illustration (its own rounded
-     * gold border is baked into the pixels) at a 1064x886 ratio - sizing
+     * gold border is baked into the pixels) at a 524x438 ratio - sizing
      * this box to that same ratio means background-size:cover never has
      * to crop or letterbox it, so no second CSS-drawn frame/box appears
      * around the artwork's own border. align-self:center overrides the
      * grid's align-items:stretch (which would otherwise force this to the
      * row's full height and break the ratio).
      */
-    aspect-ratio: 1064 / 886;
+    aspect-ratio: 524 / 438;
     align-self: center;
-    /* Soft glow instead of a hard outline - no border, no outer box. */
-    box-shadow: 0 0 60px 12px rgba(242, 194, 48, 0.25);
+    /* Soft glow instead of a hard outline - no border, no outer box.
+       (20% dimmer than the first pass: 60px/12px/0.25 -> 48px/10px/0.2) */
+    box-shadow: 0 0 48px 10px rgba(242, 194, 48, 0.2);
 }
 
 .hero-kicker {
