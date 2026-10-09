@@ -56,6 +56,23 @@ html {
     background: var(--bg);
 }
 
+/*
+ * Site-wide backdrop (added 2026-10-09, replacing a flat grid-only
+ * background) - a CSS-only approximation of a "deep black space, yellow
+ * planet-horizon glow, scattered stars, faint corner engineering lines"
+ * reference, since there's no image-generation tool available to produce
+ * an actual photorealistic version. Every layer is a gradient, no image
+ * asset, so it's free to apply on every page via this single shared rule.
+ * Layers, top to bottom in the list below:
+ *   1-2. the original faint gold grid overlay (unchanged)
+ *   3-4. small repeating diagonal ticks, pinned to the top-right and
+ *        bottom-left corners only (the "engineering lines" accent)
+ *   5-6. two sparse star-dot tiles at different repeat periods, so the
+ *        two patterns drift out of phase and read as scattered rather
+ *        than an obvious grid of dots
+ *   7.   a soft gold glow toward the right side (the "planet horizon")
+ *   8.   a dark mass hugging the bottom edge (the "moon surface" foreground)
+ */
 body {
     margin: 0;
     min-height: 100vh;
@@ -66,8 +83,40 @@ body {
     background-color: var(--bg);
     background-image:
         linear-gradient(rgba(242, 194, 48, 0.08) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(242, 194, 48, 0.08) 1px, transparent 1px);
-    background-size: 32px 32px;
+        linear-gradient(90deg, rgba(242, 194, 48, 0.08) 1px, transparent 1px),
+        repeating-linear-gradient(115deg, transparent 0 10px, rgba(242, 194, 48, 0.35) 10px 11px, transparent 11px 34px),
+        repeating-linear-gradient(115deg, transparent 0 10px, rgba(242, 194, 48, 0.3) 10px 11px, transparent 11px 34px),
+        radial-gradient(1px 1px at 23px 41px, rgba(255, 255, 255, 0.35) 1px, transparent 0),
+        radial-gradient(1.3px 1.3px at 111px 96px, rgba(255, 255, 255, 0.28) 1px, transparent 0),
+        radial-gradient(ellipse 55% 45% at 86% 42%, rgba(242, 194, 48, 0.16), transparent 70%),
+        radial-gradient(ellipse 120% 45% at 50% 125%, rgba(0, 0, 0, 0.85), transparent 70%);
+    background-size:
+        32px 32px,
+        32px 32px,
+        160px 140px,
+        160px 120px,
+        180px 180px,
+        240px 220px,
+        100% 100%,
+        100% 100%;
+    background-repeat:
+        repeat,
+        repeat,
+        no-repeat,
+        no-repeat,
+        repeat,
+        repeat,
+        no-repeat,
+        no-repeat;
+    background-position:
+        0 0,
+        0 0,
+        100% 0%,
+        0% 100%,
+        0 0,
+        0 0,
+        0 0,
+        0 0;
     background-attachment: fixed;
 }
 
