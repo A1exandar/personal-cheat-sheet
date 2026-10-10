@@ -48,7 +48,8 @@
         "card.github-actions-cheat-sheet.description": "GitHub-Actions-Workflows schreiben und verwalten: Trigger, Jobs, Steps, Secrets, Matrix-Builds und Caching, plus die gh-CLI-Befehle, um Läufe im Terminal zu beobachten, erneut auszuführen und zu debuggen.",
         "card.hardening-a-fresh-linux-server.description": "Eine praktische Hardening-Checkliste für einen frisch bereitgestellten Ubuntu/Debian-Server: Benutzer und SSH, Firewall und fail2ban, automatische Updates, Zeitsynchronisation, Kernel-/Netzwerk-Tuning und die Fehler, die einen aussperren.",
         "card.process-management-cheat-sheet.description": "Linux-Prozesse untersuchen und steuern mit ps, top, kill/pkill, nice/renice und /proc: Prozesszustände, Signale, Priorität, Prozessbäume und Job-Control.",
-        "card.linux-server-running-slow-cheat-sheet.description": "Ein systematischer Triage-Ablauf für einen langsamen Linux-Server: Load Average, dann CPU, Speicher/Swap, Disk-I/O und Netzwerk, mit den Befehlen und Schwellenwerten, um den tatsächlichen Flaschenhals zu finden."
+        "card.linux-server-running-slow-cheat-sheet.description": "Ein systematischer Triage-Ablauf für einen langsamen Linux-Server: Load Average, dann CPU, Speicher/Swap, Disk-I/O und Netzwerk, mit den Befehlen und Schwellenwerten, um den tatsächlichen Flaschenhals zu finden.",
+        "card.customizing-bash-prompt-ps1.description": "Den Bash-Prompt in ~/.bashrc mit 256-Farb-Escape-Codes umfärben: der vorhandene color_prompt-Block, den jede Debian/Ubuntu-Installation schon hat, die \\[ \\]-Wrapping-Regel, wiederverwendbare Farbvariablen und einsatzbereite Prompt-Varianten (Exit-Status, Git-Branch, zweizeilig, minimalistisch)."
     };
 
     /*
@@ -1003,7 +1004,15 @@
         "# CPU": "# CPU",
         "# memory": "# Speicher",
         "# disk": "# Disk",
-        "# Capture a few samples in the background to catch an intermittent spike": "# Ein paar Messungen im Hintergrund erfassen, um einen zeitweiligen Ausschlag einzufangen"
+        "# Capture a few samples in the background to catch an intermittent spike": "# Ein paar Messungen im Hintergrund erfassen, um einen zeitweiligen Ausschlag einzufangen",
+
+        "# try it - takes effect immediately, this shell only": "# ausprobieren - wirkt sofort, nur in dieser Shell",
+        "# restore with: cp ~/.bashrc.bak ~/.bashrc": "# wiederherstellen mit: cp ~/.bashrc.bak ~/.bashrc",
+        "# Define color variables for readability": "# Farbvariablen zur besseren Lesbarkeit definieren",
+        "# apply the change to the current shell": "# die Änderung auf die aktuelle Shell anwenden",
+        "# confirm the prompt redraws correctly after a command": "# bestätigen, dass der Prompt nach einem Befehl korrekt neu gezeichnet wird",
+        "# confirm \\w/\\W updates correctly across directory changes": "# bestätigen, dass \\w/\\W bei Verzeichniswechseln korrekt aktualisiert wird",
+        "# for the exit-status prompt: confirms a non-zero code is produced to react to": "# für den Exit-Status-Prompt: bestätigt, dass ein Code ungleich null erzeugt wird, auf den reagiert werden kann"
     };
 
     var STORAGE_KEY = "site-lang";
