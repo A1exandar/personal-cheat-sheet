@@ -26,7 +26,11 @@
   {{ $description = .Site.Params.description }}
 {{ end }}
 
-{{ $image := "images/social/default.png" | absURL }}
+{{/* ?v=N cache-busts this at social crawlers (X, LinkedIn, etc.) - they
+     cache link previews per exact URL, often for longer than any HTTP
+     cache header, so bump this whenever default.png's content changes or
+     already-shared links can keep showing a stale card indefinitely. */}}
+{{ $image := "images/social/default.png?v=2" | absURL }}
 {{ with .Params.image }}
   {{ $image = . | absURL }}
 {{ end }}
