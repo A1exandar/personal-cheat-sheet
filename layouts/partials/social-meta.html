@@ -30,7 +30,7 @@
      cache link previews per exact URL, often for longer than any HTTP
      cache header, so bump this whenever default.png's content changes or
      already-shared links can keep showing a stale card indefinitely. */}}
-{{ $image := "images/social/default.png?v=4" | absURL }}
+{{ $image := "images/social/default.png?v=5" | absURL }}
 {{ with .Params.image }}
   {{ $image = . | absURL }}
 {{ end }}
