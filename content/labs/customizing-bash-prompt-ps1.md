@@ -134,6 +134,8 @@ PS1="\[\e[38;5;124m\]\[\e[38;5;220m\]\u\[\e[38;5;143m\]@\[\e[38;5;111m\]\h \[\e[
 
 Swap in `\W` instead of `\w` if you'd rather see just the current folder name (`~/Projects/site` becomes `site`) instead of the full path - much shorter once you're a few directories deep.
 
+![The recolored prompt rendered in a terminal](/images/labs/ps1-main.png)
+
 ## 6. A few more prompt ideas
 
 ### Exit-status-aware: red on failure, green on success
@@ -145,6 +147,9 @@ PS1='$(if [ $? -eq 0 ]; then echo "\[\e[38;5;64m\]"; else echo "\[\e[38;5;124m\]
 ```
 
 > `$?` has to be read **first**, before anything else in `PS1` runs - it holds the exit code of whatever command you just ran, and gets overwritten the instant another command executes. This is the reason the whole color choice is wrapped in a `$(...)` at the very start of the string, rather than computed separately.
+
+![The same prompt in green after a command that succeeded](/images/labs/ps1-exit-success.png)
+![The same prompt in red after a command that failed](/images/labs/ps1-exit-fail.png)
 
 ### Git branch in the prompt
 
@@ -159,6 +164,8 @@ PS1='\[\e[38;5;111m\]\u@\h \[\e[38;5;171m\]\w\[\e[38;5;136m\] $(parse_git_branch
 
 Outside a git repository, `parse_git_branch` prints nothing and that segment just disappears - no empty parentheses or stray characters left behind.
 
+![The prompt with a git branch name appended, inside a repository on the main branch](/images/labs/ps1-git-branch.png)
+
 ### Two-line prompt, for long paths
 
 Puts the path on its own line and keeps the actual command line short and consistently positioned, regardless of how deep the current directory is:
@@ -169,6 +176,8 @@ PS1='\[\e[38;5;111m\]\u@\h \[\e[38;5;171m\]\w\[\e[0m\]\n\[\e[38;5;64m\]\$\[\e[0m
 
 `\n` is the only new piece here - everything after it starts on the next line, while the rest of the syntax (colors, `\u`/`\h`/`\w`) works identically to a single-line prompt.
 
+![The two-line prompt, path on top and the colored $ on its own line below](/images/labs/ps1-two-line.png)
+
 ### Minimalist, single accent color
 
 For a quieter look - just the directory name and a colored prompt character, nothing else:
@@ -176,6 +185,8 @@ For a quieter look - just the directory name and a colored prompt character, not
 ```bash
 PS1='\[\e[38;5;111m\]\W \[\e[38;5;171m\]❯\[\e[0m\] '
 ```
+
+![The minimalist prompt: just the folder name and a colored arrow](/images/labs/ps1-minimal.png)
 
 ## Verification - confirm it actually works
 
