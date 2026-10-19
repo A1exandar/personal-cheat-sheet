@@ -110,6 +110,39 @@ grep -f patterns.txt /var/log/syslog
 
 Use repeated `-e` options, an alternation with `-E`, or `-f` to read one pattern per line from a file.
 
+## Combining with xargs
+
+```bash
+grep -rl "TODO" ~/project | xargs wc -l
+grep -rlZ "DEBUG=true" /etc/myapp/ | xargs -0 sed -i 's/DEBUG=true/DEBUG=false/'
+```
+
+`xargs` is a separate tool, not a `grep` option, but the two are used together constantly: it takes the list of items `grep` prints on stdout and turns them into arguments for another command, rather than letting that output just scroll past. `grep -rl` alone only prints filenames; piped into `xargs wc -l`, those filenames become the files `wc -l` actually counts. Without `xargs`, a command like `wc -l` would just sit waiting on stdin, since `grep`'s output arrives as plain text on a pipe, not as command-line arguments the next program can act on.
+
+> Filenames can contain spaces, newlines, or other awkward characters that break a plain pipe into `xargs`. `grep -rlZ` (the `-Z` / `--null` option) separates filenames with a NUL byte instead of a newline, and `xargs -0` reads that format - the only combination that's fully safe against spaces in filenames. Plain `grep -rl | xargs` works for simple cases but splits on whitespace too, misreading a file named `my file.txt` as two separate arguments.
+
+## Combining with find -exec
+
+```bash
+find /var/log -name "*.log" -exec grep -l "OutOfMemory" {} \;
+find /etc -name "*.conf" -exec grep -q "deprecated_option" {} \; -print
+```
+
+`-exec` belongs to `find`, not to `grep`, but the pairing is everywhere: `find` locates the files, `-exec` runs a command once per file found, with `{}` substituted for that file's path and `\;` marking where the command ends. The first example finds every `.log` file under `/var/log` and runs `grep -l` against each one in turn, printing the name of any file that actually contains the match. The second uses `grep -q` (quiet - produces no output, only a pass/fail exit status) so that `find`'s own `-print` only fires for files where the `grep` inside `-exec` found something.
+
+> `-exec … \;` starts a brand-new `grep` process for every single file - fine for a handful of files, slow across a huge tree. `-exec … +` instead batches as many files as possible onto fewer command lines (the same idea as `xargs`), for commands that accept multiple files at once (`grep` does): `find /var/log -name "*.log" -exec grep -l "OutOfMemory" {} +` runs far fewer `grep` processes over a large directory tree and finishes noticeably faster.
+
+## 2>/dev/null - discarding error output
+
+```bash
+grep -r "password" /etc/ 2>/dev/null
+find / -name "*.conf" 2>/dev/null | xargs grep -l "ssl_protocols" 2>/dev/null
+```
+
+`2>/dev/null` is shell redirection, not a `grep` option - it's not specific to `grep` at all and works the same way after any command. Every command has three standard I/O streams: `0` (stdin, input), `1` (stdout, normal output), and `2` (stderr, error messages). `2>/dev/null` redirects stream `2` specifically to `/dev/null`, a special file that silently discards anything written to it. Searching all of `/etc/` as a normal user almost always hits a few directories only root can read; without this, `grep -r` buries the real matches under a `Permission denied` line for every one of them. Redirecting only stream `2` - not `1` - means the actual matches (sent to stdout) still print exactly as normal; only the permission errors are silenced.
+
+> `2>/dev/null` hides *every* error on that stream, not just the expected "permission denied" one - a typo'd path, a missing file, or a genuine problem is suppressed exactly the same way. It's worth running a command once without it first, to see what's actually being thrown away, before relying on it inside a script.
+
 ## Common administration examples
 
 ```bash
