@@ -628,6 +628,14 @@ body.home-page > .site-header {
     .hero-status-bar .mini-prompt {
         text-align: center;
     }
+
+    /* Seven icons + dividers at the desktop 14px gap come to ~370px, wider
+       than a 375px phone's content area - a tighter gap keeps them on one
+       row there, and wrap is only a fallback for even narrower screens. */
+    .landing-main .social-icons {
+        gap: 10px;
+        flex-wrap: wrap;
+    }
 }
 
 /*
