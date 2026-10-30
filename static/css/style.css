@@ -159,15 +159,16 @@ body > .site-header {
 nav {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 28px;
     font-family: "IBM Plex Mono", monospace;
 }
 
 /*
- * Nav links as outlined buttons (2026-10-30), one color each, sampled left
- * to right from the same chroma gradient as the homepage title and
- * .chroma-highlight on /about - so the four buttons read as that gradient
- * spread across the menu. Border and text share --nav-color.
+ * Nav links, one color each (2026-10-30), sampled left to right from the
+ * same chroma gradient as the homepage title and .chroma-highlight on
+ * /about - so the four links read as that gradient spread across the menu.
+ * (Briefly outlined buttons the same day; the user kept the colors and
+ * dropped the borders.)
  */
 nav a {
     --nav-color: var(--ink-muted);
@@ -177,10 +178,6 @@ nav a {
     font-weight: 600;
     letter-spacing: 0.01em;
     line-height: 1.4;
-    padding: 5px 14px;
-    border: 1.5px solid var(--nav-color);
-    border-radius: 4px;
-    transition: background-color 0.15s ease;
 }
 
 nav a:nth-child(1) { --nav-color: #d955d3; }
@@ -189,7 +186,8 @@ nav a:nth-child(3) { --nav-color: #f5a347; }
 nav a:nth-child(4) { --nav-color: #f4de44; }
 
 nav a:hover {
-    background: color-mix(in srgb, var(--nav-color) 14%, transparent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
 }
 
 .header-controls {
