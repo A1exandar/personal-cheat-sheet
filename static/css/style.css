@@ -33,7 +33,7 @@
  * the rest of the site.
  */
 :root {
-    --bg: #0A0A0A;
+    --bg: #101010;
     --surface: #141414;
     --surface-2: #1E1E1E;
     --ink: #F5F5F2;
@@ -57,21 +57,10 @@ html {
 }
 
 /*
- * Site-wide backdrop (added 2026-10-09, replacing a flat grid-only
- * background) - a CSS-only approximation of a "deep black space, yellow
- * planet-horizon glow, scattered stars, faint corner engineering lines"
- * reference, since there's no image-generation tool available to produce
- * an actual photorealistic version. Every layer is a gradient, no image
- * asset, so it's free to apply on every page via this single shared rule.
- * Layers, top to bottom in the list below:
- *   1-2. the original faint gold grid overlay (unchanged)
- *   3-4. small repeating diagonal ticks, pinned to the top-right and
- *        bottom-left corners only (the "engineering lines" accent)
- *   5-6. two sparse star-dot tiles at different repeat periods, so the
- *        two patterns drift out of phase and read as scattered rather
- *        than an obvious grid of dots
- *   7.   a soft gold glow toward the right side (the "planet horizon")
- *   8.   a dark mass hugging the bottom edge (the "moon surface" foreground)
+ * Site-wide backdrop: a single flat near-black, var(--bg) on html (2026-10-30
+ * - no image and no gradient layers anymore; previously a CSS-only stack of
+ * gold grid/star/glow gradients). #101010 is the exact background of the
+ * E25DX reference page the homepage title styling was modeled on.
  */
 body {
     margin: 0;
@@ -80,44 +69,6 @@ body {
     font-family: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
     font-size: 1rem;
     line-height: 1.6;
-    background-color: var(--bg);
-    background-image:
-        linear-gradient(rgba(242, 194, 48, 0.08) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(242, 194, 48, 0.08) 1px, transparent 1px),
-        repeating-linear-gradient(115deg, transparent 0 10px, rgba(242, 194, 48, 0.35) 10px 11px, transparent 11px 34px),
-        repeating-linear-gradient(115deg, transparent 0 10px, rgba(242, 194, 48, 0.3) 10px 11px, transparent 11px 34px),
-        radial-gradient(1px 1px at 23px 41px, rgba(255, 255, 255, 0.35) 1px, transparent 0),
-        radial-gradient(1.3px 1.3px at 111px 96px, rgba(255, 255, 255, 0.28) 1px, transparent 0),
-        radial-gradient(ellipse 55% 45% at 86% 42%, rgba(242, 194, 48, 0.16), transparent 70%),
-        radial-gradient(ellipse 120% 45% at 50% 125%, rgba(0, 0, 0, 0.85), transparent 70%);
-    background-size:
-        32px 32px,
-        32px 32px,
-        160px 140px,
-        160px 120px,
-        180px 180px,
-        240px 220px,
-        100% 100%,
-        100% 100%;
-    background-repeat:
-        repeat,
-        repeat,
-        no-repeat,
-        no-repeat,
-        repeat,
-        repeat,
-        no-repeat,
-        no-repeat;
-    background-position:
-        0 0,
-        0 0,
-        100% 0%,
-        0% 100%,
-        0 0,
-        0 0,
-        0 0,
-        0 0;
-    background-attachment: fixed;
 }
 
 h1, h2, h3, h4 {
@@ -208,21 +159,37 @@ body > .site-header {
 nav {
     display: flex;
     align-items: center;
-    gap: 32px;
+    gap: 14px;
     font-family: "IBM Plex Mono", monospace;
 }
 
+/*
+ * Nav links as outlined buttons (2026-10-30), one color each, sampled left
+ * to right from the same chroma gradient as the homepage title and
+ * .chroma-highlight on /about - so the four buttons read as that gradient
+ * spread across the menu. Border and text share --nav-color.
+ */
 nav a {
-    color: var(--ink-muted);
+    --nav-color: var(--ink-muted);
+    color: var(--nav-color);
     text-decoration: none;
-    font-size: 0.92rem;
+    font-size: 0.88rem;
+    font-weight: 600;
     letter-spacing: 0.01em;
+    line-height: 1.4;
+    padding: 5px 14px;
+    border: 1.5px solid var(--nav-color);
+    border-radius: 4px;
+    transition: background-color 0.15s ease;
 }
 
+nav a:nth-child(1) { --nav-color: #d955d3; }
+nav a:nth-child(2) { --nav-color: #ea748e; }
+nav a:nth-child(3) { --nav-color: #f5a347; }
+nav a:nth-child(4) { --nav-color: #f4de44; }
+
 nav a:hover {
-    color: var(--accent-ink);
-    text-decoration: underline;
-    text-underline-offset: 3px;
+    background: color-mix(in srgb, var(--nav-color) 14%, transparent);
 }
 
 .header-controls {
@@ -373,16 +340,20 @@ body.home-page > .site-header {
 }
 
 .landing-hero {
-    display: grid;
-    grid-template-columns: minmax(260px, 380px) 1fr;
-    align-items: stretch;
-    gap: 32px;
+    display: flex;
+    justify-content: center;
     width: 100%;
     max-width: 1000px;
     margin: 0 auto;
-    min-height: clamp(280px, 34vw, 420px);
 }
 
+/*
+ * The hero text and social icons sit in one centered card (2026-10-30,
+ * replacing the old text-left / penguin-illustration-right grid): --surface
+ * at 70% opacity plus a backdrop blur - built as glassmorphism over a photo
+ * backdrop that was later dropped for flat --bg, kept as-is because the
+ * user liked the card's placement. The -webkit- prefix is for Safari.
+ */
 .hero-copy {
     display: flex;
     flex-direction: column;
@@ -390,33 +361,14 @@ body.home-page > .site-header {
     align-items: flex-start;
     gap: 16px;
     min-width: 0;
-}
-
-.hero-photo {
-    /* ?v=N cache-busts this specific image at the CDN/browser level - the
-       filename never changes when the photo is swapped, and this asset is
-       served with a 7-day Cache-Control, so without a version bump here a
-       previously-cached copy can keep showing after a photo change even
-       past a hard refresh (the CDN edge cache isn't cleared by that). */
-    background-image: url("/images/home-hero-penguin-gold.png?v=3");
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    border-radius: var(--radius);
-    /*
-     * The image is a self-contained framed illustration (its own rounded
-     * gold border is baked into the pixels) at a 524x438 ratio - sizing
-     * this box to that same ratio means background-size:cover never has
-     * to crop or letterbox it, so no second CSS-drawn frame/box appears
-     * around the artwork's own border. align-self:center overrides the
-     * grid's align-items:stretch (which would otherwise force this to the
-     * row's full height and break the ratio).
-     */
-    aspect-ratio: 524 / 438;
-    align-self: center;
-    /* Soft glow instead of a hard outline - no border, no outer box.
-       (20% dimmer than the first pass: 60px/12px/0.25 -> 48px/10px/0.2) */
-    box-shadow: 0 0 48px 10px rgba(242, 194, 48, 0.2);
+    max-width: 100%;
+    padding: 40px 48px;
+    background: rgba(20, 20, 20, 0.7);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    backdrop-filter: blur(14px) saturate(140%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
 }
 
 .hero-kicker {
@@ -429,21 +381,32 @@ body.home-page > .site-header {
     text-transform: uppercase;
 }
 
+/*
+ * "Personal Cheat Sheet" in the same chroma gradient as .chroma-highlight on
+ * /about (colors repeated here rather than reusing that class, since its
+ * font-weight would fight this rule's), set in Special Elite - a distressed
+ * typewriter face, the closest free match to the hand-inked E25DX wordmark
+ * (which is itself an SVG drawing, not a font). Special Elite ships in one
+ * weight only; the 700 here is browser-synthesized bold, which thickens the
+ * strokes so the gradient reads at a glance. Loaded only by home.html.
+ */
 .hero-title {
     margin: 0;
     max-width: 100%;
-    color: var(--ink);
-    font-family: inherit;
+    font-family: "Special Elite", "IBM Plex Mono", monospace;
     font-weight: 700;
-    font-size: clamp(2.2rem, 5vw, 3.6rem);
+    font-size: clamp(2.4rem, 5.5vw, 4rem);
     line-height: 1.08;
     letter-spacing: 0.01em;
     overflow-wrap: break-word;
+    background-image: linear-gradient(90deg, #d955d3, #df62bb, #ea748e, #f18a68, #f5a347, #f7b932, #f9ca2d, #f4de44);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
 }
 
 .hero-title-accent {
     display: block;
-    color: var(--accent-ink);
 }
 
 .hero-divider {
@@ -523,21 +486,8 @@ body.home-page > .site-header {
         padding: 24px 16px 40px;
     }
 
-    .landing-hero {
-        grid-template-columns: 1fr;
-        min-height: auto;
-        gap: 28px;
-    }
-
-    /* Mobile mockup puts the framed illustration above the headline, the
-       reverse of the desktop side-by-side order. */
     .hero-copy {
-        order: 2;
-    }
-
-    .hero-photo {
-        order: 1;
-        width: 100%;
+        padding: 28px 24px;
     }
 
     /* Below 900px there isn't room for the brand and the nav links side by
@@ -630,10 +580,16 @@ body.home-page > .site-header {
     }
 
     /* Seven icons + dividers at the desktop 14px gap come to ~370px, wider
-       than a 375px phone's content area - a tighter gap keeps them on one
-       row there, and wrap is only a fallback for even narrower screens. */
+       than a 375px phone's content area once the glass card's own padding
+       is subtracted - a tighter gap and slimmer card padding keep them on
+       one row there, and wrap is only a fallback for even narrower screens. */
+    .hero-copy {
+        width: 100%;
+        padding: 24px 16px;
+    }
+
     .landing-main .social-icons {
-        gap: 10px;
+        gap: 7px;
         flex-wrap: wrap;
     }
 }
