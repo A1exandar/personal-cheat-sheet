@@ -49,6 +49,12 @@
     --prompt-cursor: #A6E22E;
     --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.35);
     --radius: 8px;
+    /* Violet-blue-cyan-green chroma (2026-11-07, sampled from a cybersecurity
+       banner the user picked; was pink-orange-yellow). Used by the nav links,
+       the homepage title, .chroma-highlight and the A1ex@ndar wordmark SVG. */
+    --chroma-gradient: linear-gradient(90deg, #a07cf0, #8a8cf2, #6fa0f0, #7cbdf4, #8cd3e6, #89e5d0, #89ebb5, #7ef09a);
+    --chroma-aqua: #8cd3e6;
+    --chroma-green: #7ef09a;
 }
 
 html {
@@ -180,10 +186,10 @@ nav a {
     line-height: 1.4;
 }
 
-nav a:nth-child(1) { --nav-color: #d955d3; }
-nav a:nth-child(2) { --nav-color: #ea748e; }
-nav a:nth-child(3) { --nav-color: #f5a347; }
-nav a:nth-child(4) { --nav-color: #f4de44; }
+nav a:nth-child(1) { --nav-color: #a07cf0; }
+nav a:nth-child(2) { --nav-color: #6fa0f0; }
+nav a:nth-child(3) { --nav-color: #8cd3e6; }
+nav a:nth-child(4) { --nav-color: var(--chroma-green); }
 
 nav a:hover {
     text-decoration: underline;
@@ -371,7 +377,7 @@ body.home-page > .site-header {
 
 .hero-kicker {
     margin: 0;
-    color: var(--accent-ink);
+    color: var(--chroma-aqua);
     font-family: "IBM Plex Mono", ui-monospace, monospace;
     font-size: 0.8rem;
     font-weight: 600;
@@ -397,7 +403,7 @@ body.home-page > .site-header {
     line-height: 1.08;
     letter-spacing: 0.01em;
     overflow-wrap: break-word;
-    background-image: linear-gradient(90deg, #d955d3, #df62bb, #ea748e, #f18a68, #f5a347, #f7b932, #f9ca2d, #f4de44);
+    background-image: var(--chroma-gradient);
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;
@@ -411,7 +417,7 @@ body.home-page > .site-header {
     display: block;
     width: 46px;
     height: 3px;
-    background: var(--accent);
+    background: var(--chroma-gradient);
 }
 
 .hero-description {
@@ -429,12 +435,22 @@ body.home-page > .site-header {
     height: auto;
 }
 
-/* Same pink-orange-yellow gradient as the "A1ex@ndar" wordmark SVG above
+/* Page titles (/sheets, /labs, /about and article titles): the h1 keeps its
+   block box and border, the gradient sits on an inner span so it spans the
+   text itself rather than the full column width. */
+.chroma-text {
+    background-image: var(--chroma-gradient);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+/* Same chroma gradient as the "A1ex@ndar" wordmark SVG above
    it, reused as a text effect for a one-off highlighted phrase in the
    /about bio (currently "but in love with Arch" / "aber verliebt in
    Arch") - colors sampled directly from that file's fill values. */
 .chroma-highlight {
-    background-image: linear-gradient(90deg, #d955d3, #df62bb, #ea748e, #f18a68, #f5a347, #f7b932, #f9ca2d, #f4de44);
+    background-image: var(--chroma-gradient);
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;
@@ -648,7 +664,7 @@ a:hover {
 
 .post-tags {
     margin-top: 2px;
-    color: var(--accent-ink);
+    color: var(--chroma-green);
     font-size: 0.78rem;
     font-style: italic;
 }
@@ -942,7 +958,7 @@ a:hover {
 }
 
 .sheet-card-tag {
-    color: var(--accent-ink);
+    color: var(--chroma-green);
     font-style: italic;
 }
 
