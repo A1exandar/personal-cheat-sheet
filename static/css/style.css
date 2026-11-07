@@ -40,9 +40,11 @@
     --ink-muted: #ADADA3;
     --ink-faint: #6B6A62;
     --border: #2B2B24;
-    --accent: #F2C230;
-    --accent-ink: #F6D368;
-    --accent-wash: #2A2210;
+    /* Links, article h2/h3, bullets, blockquotes: blue from the chroma
+       palette below (2026-11-07; these were gold #F2C230 / #F6D368). */
+    --accent: #6fa0f0;
+    --accent-ink: #7cbdf4;
+    --accent-wash: #121c28;
     --prompt-user: #F0C419;
     --prompt-at: #E08FD0;
     --prompt-host: #93B4F5;
@@ -786,12 +788,12 @@ a:hover {
 }
 
 .sheet-article :not(pre) > code {
-    /* Monokai's "highlight line" tone for the chip background, with its
-       string-yellow for the text, so inline code reads as part of the same
-       palette as the fenced blocks without competing with them. */
+    /* Mint from the chroma palette on a dark blue-green chip (2026-11-07;
+       was Monokai olive/string-yellow), so inline code stands apart from
+       the blue links and headings around it. */
     padding: 2px 6px;
-    background: #3e3d32;
-    color: #e6db74;
+    background: #182a2c;
+    color: #89e5d0;
     border-radius: 3px;
 }
 
