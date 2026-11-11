@@ -1,7 +1,7 @@
 +++
 title = "LVM Cheat Sheet"
 date = 2026-10-17
-description = "Logical Volume Management: physical volumes, volume groups, and logical volumes - creating each layer, extending a logical volume (the classic RHCSA task), growing the volume group first when needed, and the much riskier, XFS-incompatible process of shrinking one."
+description = "Logical Volume Management: physical volumes, volume groups, and logical volumes - creating each layer, extending a logical volume (the classic RHCSA task), growing the volume group first when needed, using the space after an existing disk was enlarged, and the much riskier, XFS-incompatible process of shrinking one."
 tags = ["linux", "lvm", "storage", "rhel", "sysadmin"]
 +++
 
@@ -89,6 +89,29 @@ vgs                                      # confirm VG size grew
 
 Only needed when the VG itself is out of free space to give an LV - if `vgs` still shows free space, skip straight to `lvextend`.
 
+## Growing an existing disk - after it was enlarged in the hypervisor
+
+When a virtual disk is made bigger in VMware, Proxmox or a cloud console, nothing inside the system grows on its own - the kernel, the partition, the PV, the LV and the filesystem each have to be told, in that order. When the whole disk is the PV (`/dev/sdb`):
+
+```bash
+echo 1 | sudo tee /sys/class/block/sdb/device/rescan   # make the kernel re-read the disk size, no reboot needed
+lsblk /dev/sdb                                         # confirm the disk now shows the new size
+sudo pvresize /dev/sdb                                 # grow the PV to fill the whole disk
+vgs                                                    # VFree now shows the added space
+sudo lvextend -r -l +100%FREE /dev/vg_data/lv_apps     # give it to the LV, filesystem included
+```
+
+When the PV is a partition - the usual case for the system disk, where `/dev/sda3` holds the `rhel` VG - grow the partition first:
+
+```bash
+sudo dnf install cloud-utils-growpart                  # provides growpart
+sudo growpart /dev/sda 3                               # grow partition 3 to the end of the disk (note the space)
+sudo pvresize /dev/sda3                                # then the PV on it
+sudo lvextend -r -L +10G /dev/rhel/root                # then the LV and its filesystem
+```
+
+`growpart` can only grow the **last** partition on the disk, into free space right after it. A disk without LVM works the same way, just without `pvresize` and `lvextend`: `growpart`, then `xfs_growfs` on the mount point (or `resize2fs` on the partition for ext4). Virtio disks (`/dev/vda`) usually pick up the new size without the rescan step - check `lsblk` first.
+
 ## Reducing a logical volume - handle with real care
 
 ```bash
@@ -120,6 +143,11 @@ sudo lvextend -r -L +10G /dev/vg_data/lv_apps
 sudo pvcreate /dev/sdc
 sudo vgextend vg_data /dev/sdc
 sudo lvextend -r -l +100%FREE /dev/vg_data/lv_apps
+
+# Use the space after the existing disk itself was enlarged
+echo 1 | sudo tee /sys/class/block/sdb/device/rescan
+sudo pvresize /dev/sdb
+sudo lvextend -r -l +100%FREE /dev/vg_data/lv_apps
 ```
 
 ## Safety notes
@@ -128,4 +156,5 @@ sudo lvextend -r -l +100%FREE /dev/vg_data/lv_apps
 - `pvcreate` destroys whatever was on that device with no confirmation - run `lsblk` immediately beforehand and read the device name twice.
 - When extending: grow the LV, *then* the filesystem. When reducing (ext4/ext3 only): shrink the filesystem, *then* the LV. Reversing either order risks data loss - `lvreduce -r` / `lvextend -r` exist specifically to never get this backwards.
 - Test a new `/etc/fstab` entry with `sudo mount -a` immediately - an entry with a typo or wrong path only reveals itself at boot time otherwise, which can mean a system that won't come back up cleanly after a reboot.
+- Take a snapshot in the hypervisor before growing a partition with `growpart` - it rewrites the partition table of a disk that's in use. `growpart --dry-run /dev/sda 3` shows the change without making it.
 - Back up before any shrink operation - even done in the correct order, a miscalculated target size on a shrink is one of the few LVM operations that genuinely risks data loss.
