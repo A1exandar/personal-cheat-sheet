@@ -11,6 +11,8 @@ title = 'Personal Cheat Sheet'
 # error. Setting the site's real timezone here makes bare dates resolve
 # correctly relative to actual local time instead.
 timeZone = 'Europe/Belgrade'
+# Generate /robots.txt from layouts/robots.txt (allows everything, points to the sitemap).
+enableRobotsTXT = true
 
 [params]
   # Site-wide fallback description, used for social preview meta tags
