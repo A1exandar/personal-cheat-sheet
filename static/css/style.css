@@ -21,6 +21,20 @@
 }
 
 /*
+ * Five Nerd Font icons (GitHub, LinkedIn, Instagram, YouTube, envelope)
+ * subset out of the same MesloLGS NF file, 3 KB instead of 1 MB, for the
+ * social links in the homepage terminal window. Nerd Fonts 2.3.3 has no X
+ * or Strava glyph, so those two are inline SVGs in home.html.
+ */
+@font-face {
+    font-family: "Term Icons";
+    src: url("/fonts/term-icons.woff2?v=1") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: block;
+}
+
+/*
  * Design tokens - black/gold theme (switched from the blue theme 2026-10-09,
  * which itself replaced the original green theme 2026-09-29), the site's
  * single theme everywhere: header/nav, the homepage, the about page,
@@ -33,13 +47,17 @@
  * the rest of the site.
  */
 :root {
-    --bg: #101010;
-    --surface: #141414;
-    --surface-2: #1E1E1E;
+    /* Menu and page background (2026-11-19): #0f1112, sampled from the swatch
+       the user picked to go with the green-grid homepage backdrop (was the
+       neutral #101010 / #141414 / #1E1E1E / #2B2B24 set). */
+    --bg: #0f1112;
+    --menu-bg: #0f1112;
+    --surface: #15181a;
+    --surface-2: #1c2022;
     --ink: #F5F5F2;
     --ink-muted: #ADADA3;
     --ink-faint: #6B6A62;
-    --border: #2B2B24;
+    --border: #262b2e;
     /* Links, article h2/h3, bullets, blockquotes: blue from the chroma
        palette below (2026-11-07; these were gold #F2C230 / #F6D368). */
     --accent: #6fa0f0;
@@ -96,7 +114,7 @@ h1, h2, h3, h4 {
 .site-header {
     width: 100vw;
     margin-left: calc(50% - 50vw);
-    background: var(--surface);
+    background: var(--menu-bg);
     border-bottom: 1px solid var(--border);
     /*
      * Keep the menu pinned to the top of the viewport while the page
@@ -141,21 +159,40 @@ body > .site-header {
 }
 
 /*
- * Logo/branding slot, reusing the exact same .terminal-prompt / .prompt-*
- * markup and colors as the /sheets and /about footer signature (see the
- * mini-prompt partial and its color rules below) - only the wrapper here
- * is a real, accessible link instead of a decorative aria-hidden <p>.
+ * Logo (2026-11-19, replaced the [aleksandar@thinkpad] prompt): the old
+ * homepage title "Personal Cheat Sheet" on one line, in the same Special
+ * Elite typewriter face and chroma gradient. Special Elite ships in one
+ * weight only; 700 is browser-synthesized bold so the gradient reads at
+ * this small size. The font is loaded by every layout's Google Fonts link.
  */
-.brand-prompt {
-    display: inline-flex;
-    align-items: center;
+.brand-logo {
     flex-shrink: 0;
-    font-size: 1rem;
+    font-family: "Special Elite", "IBM Plex Mono", monospace;
+    font-weight: 700;
+    font-size: 1.35rem;
+    line-height: 1.1;
+    white-space: nowrap;
     text-decoration: none;
+    background-image: var(--chroma-gradient);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
 }
 
-.brand-prompt:hover {
-    opacity: 0.7;
+.brand-logo:hover {
+    opacity: 0.8;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
 }
 
 .nav-wrap {
@@ -319,116 +356,221 @@ main {
 }
 
 /*
- * Home page: header, hero and footer all sit directly on the page's own
- * background (the grid pattern from body/html, see above) - no separate
- * "header bar" or "hero panel" fill color - and the hero copy+photo sit
- * vertically centered in whatever space is left between the header and
- * the footer, instead of being pinned near the top.
+ * Home page (2026-11-19): the green-grid backdrop the user supplied, with
+ * the menu as a translucent #0f1112 bar over it, and the hero is a terminal
+ * window (modeled on a reference screenshot) vertically centered between
+ * the header and the footer. #07100e is the image's average color, shown
+ * until it loads.
  */
 body.home-page {
     display: flex;
     flex-direction: column;
+    /* The black layer darkens the image by 55% (user requests 2026-11-19:
+       20%, 20% and 15% more); change its alpha to make it lighter or darker. */
+    background:
+        linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),
+        #07100e url("/images/home-bg-grid.webp?v=1") center / cover no-repeat;
 }
 
 body.home-page > .site-header {
-    background: transparent;
-    border-bottom-color: transparent;
+    background: rgba(15, 17, 18, 0.78);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
 }
 
 .landing-main {
     max-width: none;
+    width: 100%;
     margin: 0;
     flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     padding: 48px min(6vw, 56px) 56px;
 }
 
-.landing-hero {
-    display: flex;
-    justify-content: center;
+.term-window {
     width: 100%;
-    max-width: 1000px;
-    margin: 0 auto;
-}
-
-/*
- * The hero text and social icons sit in one centered card (2026-10-30,
- * replacing the old text-left / penguin-illustration-right grid): --surface
- * at 70% opacity plus a backdrop blur - built as glassmorphism over a photo
- * backdrop that was later dropped for flat --bg, kept as-is because the
- * user liked the card's placement. The -webkit- prefix is for Safari.
- */
-.hero-copy {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 16px;
-    min-width: 0;
-    max-width: 100%;
-    padding: 40px 48px;
-    background: rgba(20, 20, 20, 0.7);
-    -webkit-backdrop-filter: blur(14px) saturate(140%);
-    backdrop-filter: blur(14px) saturate(140%);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 16px;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
-}
-
-.hero-kicker {
-    margin: 0;
-    color: var(--chroma-aqua);
+    max-width: 600px;
+    /* Body and frame darkened twice on request (2026-11-19): 15%, then 20%. */
+    background: rgba(9, 10, 11, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.062);
+    border-radius: 12px;
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
+    overflow: hidden;
     font-family: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+.term-titlebar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 38px;
+    padding: 0 16px;
+    background: #0e1012;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.041);
+}
+
+.term-dots {
+    position: absolute;
+    left: 16px;
+    display: flex;
+    gap: 8px;
+}
+
+.term-dots span {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #ff5f57;
+}
+
+.term-dots span:nth-child(2) { background: #febc2e; }
+.term-dots span:nth-child(3) { background: #28c840; }
+
+.term-title {
+    color: #7d8590;
     font-size: 0.8rem;
-    font-weight: 600;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
+    letter-spacing: 0.02em;
 }
 
-/*
- * "Personal Cheat Sheet" in the same chroma gradient as .chroma-highlight on
- * /about (colors repeated here rather than reusing that class, since its
- * font-weight would fight this rule's), set in Special Elite - a distressed
- * typewriter face, the closest free match to the hand-inked E25DX wordmark
- * (which is itself an SVG drawing, not a font). Special Elite ships in one
- * weight only; the 700 here is browser-synthesized bold, which thickens the
- * strokes so the gradient reads at a glance. Loaded only by home.html.
- */
-.hero-title {
-    margin: 0;
-    max-width: 100%;
-    font-family: "Special Elite", "IBM Plex Mono", monospace;
-    font-weight: 700;
-    font-size: clamp(2.4rem, 5.5vw, 4rem);
-    line-height: 1.08;
-    letter-spacing: 0.01em;
-    overflow-wrap: break-word;
-    background-image: var(--chroma-gradient);
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
-}
-
-.hero-title-accent {
-    display: block;
-}
-
-.hero-divider {
-    display: block;
-    width: 46px;
-    height: 3px;
-    background: var(--chroma-gradient);
-}
-
-.hero-description {
-    margin: 0;
-    max-width: 46ch;
-    color: var(--ink-muted);
+.term-body {
+    padding: 26px 30px 30px;
     font-size: 0.95rem;
-    line-height: 1.5;
+    line-height: 1.7;
 }
+
+.term-body p {
+    margin: 0;
+}
+
+.term-prompt {
+    color: #e6edf3;
+    font-weight: 500;
+}
+
+/* └─$ at the start of each block; the text after it keeps a hanging
+   indent, so a wrapped line lines up with the first. */
+.term-line {
+    display: flex;
+    gap: 0.6em;
+}
+
+.term-mark {
+    flex-shrink: 0;
+    color: var(--chroma-green);
+    font-weight: 500;
+}
+
+.term-links-mark {
+    margin-top: 22px !important;
+}
+
+.term-cmd {
+    color: #e6edf3;
+    font-weight: 500;
+}
+
+.term-prompt .tp-bracket,
+.term-prompt .tp-at {
+    color: var(--chroma-green);
+}
+
+.term-prompt .tp-user {
+    color: var(--chroma-green);
+    font-weight: 600;
+}
+
+.term-prompt .tp-host {
+    color: var(--chroma-aqua);
+    font-weight: 600;
+}
+
+.term-prompt .tp-dir {
+    color: #6fa0f0;
+}
+
+.term-cursor {
+    display: inline-block;
+    width: 0.6em;
+    height: 1.15em;
+    vertical-align: -0.2em;
+    background: var(--chroma-green);
+    animation: prompt-cursor-blink 1.1s steps(1) infinite;
+}
+
+/* After the last link, like the cursor at the end of a command's output. */
+.term-links li .term-cursor {
+    margin-left: 10px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .term-cursor {
+        animation: none;
+    }
+}
+
+/* The description follows the prompt line directly, like the second line
+   of a two-line Kali prompt (┌── ... / └─$ ...). */
+.term-output {
+    margin-top: 0 !important;
+    color: #c9d1d9;
+}
+
+.term-links {
+    list-style: none;
+    margin: 4px 0 0;
+    padding: 0;
+}
+
+.term-links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    padding: 3px 0;
+    color: #e6edf3;
+    text-decoration: none;
+}
+
+.term-links a:hover span:last-child {
+    color: var(--chroma-green);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+/* One chroma stop per link, top to bottom, so the icons read as the same
+   violet-to-green gradient as the logo and the menu. */
+.term-icon {
+    flex-shrink: 0;
+    color: var(--icon-color);
+    fill: currentColor;
+}
+
+/* Same 20px slot for both kinds of icon, so every name starts in the
+   same column. */
+svg.term-icon {
+    width: 16px;
+    height: 16px;
+    margin: 0 2px;
+}
+
+.term-icon.nf {
+    width: 20px;
+    font-family: "Term Icons";
+    font-size: 19px;
+    line-height: 20px;
+    text-align: center;
+}
+
+.term-links li:nth-child(1) { --icon-color: #a07cf0; }
+.term-links li:nth-child(2) { --icon-color: #8a8cf2; }
+.term-links li:nth-child(3) { --icon-color: #6fa0f0; }
+.term-links li:nth-child(4) { --icon-color: #7cbdf4; }
+.term-links li:nth-child(5) { --icon-color: #8cd3e6; }
+.term-links li:nth-child(6) { --icon-color: #89e5d0; }
+.term-links li:nth-child(7) { --icon-color: var(--chroma-green); }
 
 .identity-wordmark {
     display: block;
@@ -470,40 +612,9 @@ body.home-page > .site-header {
     border: 0;
 }
 
-.landing-main .social-icons {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 14px;
-}
-
-.landing-main .social-icons img {
-    display: block;
-    width: 28px !important;
-    height: 28px !important;
-    max-width: 28px !important;
-    max-height: 28px !important;
-    object-fit: contain;
-    opacity: 0.88;
-}
-
-.landing-main .social-icons a:hover img {
-    opacity: 1;
-}
-
-.icon-divider {
-    width: 1px;
-    height: 22px;
-    background: var(--border);
-}
-
 @media (max-width: 900px) {
     .landing-main {
         padding: 24px 16px 40px;
-    }
-
-    .hero-copy {
-        padding: 28px 24px;
     }
 
     /* Below 900px there isn't room for the brand and the nav links side by
@@ -521,7 +632,7 @@ body.home-page > .site-header {
         flex-direction: column;
         align-items: flex-start;
         gap: 18px;
-        background: var(--surface);
+        background: var(--menu-bg);
         border-bottom: 1px solid var(--border);
         padding: 18px;
         z-index: 20;
@@ -595,18 +706,18 @@ body.home-page > .site-header {
         text-align: center;
     }
 
-    /* Seven icons + dividers at the desktop 14px gap come to ~370px, wider
-       than a 375px phone's content area once the glass card's own padding
-       is subtracted - a tighter gap and slimmer card padding keep them on
-       one row there, and wrap is only a fallback for even narrower screens. */
-    .hero-copy {
-        width: 100%;
-        padding: 24px 16px;
+    .term-body {
+        padding: 22px 18px 24px;
+        font-size: 0.88rem;
     }
 
-    .landing-main .social-icons {
-        gap: 7px;
-        flex-wrap: wrap;
+    /* The desktop line break would leave one word on its own line here. */
+    .term-output br {
+        display: none;
+    }
+
+    .brand-logo {
+        font-size: 1.15rem;
     }
 }
 

@@ -11,7 +11,7 @@
         "nav.home": "./start",
         "nav.about": "./über-mich",
         "hero.personal": "Persönliches",
-        "hero.description": "Praktische Notizen, Befehle und Lösungen<br>für Linux, Infrastruktur und Automatisierung.",
+        "hero.description": "Praktische Notizen, Befehle und Lösungen <br>für Linux, Infrastruktur und Automatisierung.",
         "footer.ready": "Bereit.",
         "sheets.description": "Eine persönliche Referenz für häufig verwendete Linux-Befehle und Systemadministrationsaufgaben.",
         "labs.description": "Praktische Anleitungen und Konfigurations-Walkthroughs für reale Aufgaben, die ich tatsächlich durchgearbeitet habe - größer als ein einzelner Befehl, kleiner als ein vollständiges Projekt.",
