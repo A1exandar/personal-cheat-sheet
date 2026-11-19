@@ -50,14 +50,18 @@
     /* Menu and page background (2026-11-19): #0f1112, sampled from the swatch
        the user picked to go with the green-grid homepage backdrop (was the
        neutral #101010 / #141414 / #1E1E1E / #2B2B24 set). */
-    --bg: #0f1112;
+    /* Black page background for every page but the homepage (2026-11-19);
+       cards and articles take their slate colors from a reference the user
+       picked, with --term-green (the homepage cursor) as the one accent. */
+    --bg: #000000;
     --menu-bg: #0f1112;
-    --surface: #15181a;
-    --surface-2: #1c2022;
+    --surface: #161b1d;
+    --surface-2: #1a2123;
+    --term-green: #7ef09a;
     --ink: #F5F5F2;
     --ink-muted: #ADADA3;
     --ink-faint: #6B6A62;
-    --border: #262b2e;
+    --border: #2b3335;
     /* Links, article h2/h3, bullets, blockquotes: blue from the chroma
        palette below (2026-11-07; these were gold #F2C230 / #F6D368). */
     --accent: #6fa0f0;
@@ -159,7 +163,7 @@ body > .site-header {
 }
 
 /*
- * Logo (2026-11-19, replaced the [aleksandar@thinkpad] prompt): the old
+ * Logo (2026-11-19, replaced the [alexandar@thinkpad] prompt): the old
  * homepage title "Personal Cheat Sheet" on one line, in the same Special
  * Elite typewriter face and chroma gradient. Special Elite ships in one
  * weight only; 700 is browser-synthesized bold so the gradient reads at
@@ -313,21 +317,22 @@ main {
     font-family: "IBM Plex Mono", ui-monospace, monospace;
 }
 
+/* Same colors as the homepage terminal prompt (2026-11-19; was yellow
+   user, pink @, periwinkle host). */
 .terminal-prompt .prompt-bracket,
-.terminal-prompt .prompt-dollar {
-    color: var(--ink-muted);
+.terminal-prompt .prompt-dollar,
+.terminal-prompt .prompt-at {
+    color: var(--term-green);
 }
 
 .terminal-prompt .prompt-user {
-    color: var(--prompt-user);
-}
-
-.terminal-prompt .prompt-at {
-    color: var(--prompt-at);
+    color: var(--term-green);
+    font-weight: 600;
 }
 
 .terminal-prompt .prompt-host {
-    color: var(--prompt-host);
+    color: var(--chroma-aqua);
+    font-weight: 600;
 }
 
 .terminal-prompt .prompt-cursor {
@@ -335,7 +340,7 @@ main {
     width: 0.5em;
     height: 1em;
     margin-left: 0.15em;
-    border: 0.09em solid var(--prompt-cursor);
+    border: 0.09em solid var(--term-green);
     vertical-align: -0.15em;
     animation: prompt-cursor-blink 1.1s steps(1) infinite;
 }
@@ -792,7 +797,7 @@ a:hover {
  * general card treatment, matching the reference's article/entry panels.
  */
 .sheet-article {
-    background: var(--surface);
+    background: radial-gradient(ellipse 80% 260px at 50% 0, rgba(126, 240, 154, 0.05), transparent), var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     box-shadow: var(--shadow);
@@ -992,12 +997,13 @@ a:hover {
     align-items: center;
     gap: 14px;
     padding: 14px 16px;
-    background: var(--surface);
+    /* Slate card with a faint green glow along the top, from the reference
+       the user picked (2026-11-19). */
+    background: linear-gradient(180deg, rgba(126, 240, 154, 0.045), transparent 70%), var(--surface);
     border: 1px solid var(--border);
-    /* The accent color itself is set per-card by the nth-child cycle below;
-       this rule only wires it up to a visible left edge, so future sheets
-       automatically get a color with no per-article change needed. */
-    border-left: 3px solid var(--accent, #58e0c1);
+    /* One terminal-green marker for every card (2026-11-19; was a cycle of
+       six colors). */
+    border-left: 3px solid var(--term-green);
     border-radius: 3px;
     box-shadow: var(--shadow);
     color: inherit;
@@ -1005,24 +1011,23 @@ a:hover {
     transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
+/* Soft terminal-green glow on hover. */
 .sheet-card:hover,
 .sheet-card:focus-visible {
-    background: var(--surface-2);
-    border-color: var(--accent, #58e0c1);
-    /* Glowing edge in the card's own accent color (the same one used for
-       its left-edge stripe, set per-card by the nth-child cycle below) -
-       a tight bright layer plus a wider soft layer for the glow itself. */
-    box-shadow: var(--shadow), 0 0 0 1px var(--accent, #58e0c1), 0 0 18px 2px var(--accent, #58e0c1);
+    background: linear-gradient(180deg, rgba(126, 240, 154, 0.07), transparent 70%), var(--surface-2);
+    border-color: rgba(126, 240, 154, 0.55);
+    border-left-color: var(--term-green);
+    box-shadow: var(--shadow), 0 0 14px 1px rgba(126, 240, 154, 0.22);
 }
 
 .sheet-card:focus-visible {
-    outline: 2px solid var(--accent, #58e0c1);
+    outline: 2px solid var(--term-green);
     outline-offset: 2px;
 }
 
 .sheet-card:hover .sheet-card-arrow,
 .sheet-card:focus-visible .sheet-card-arrow {
-    color: var(--accent, #58e0c1);
+    color: var(--term-green);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -1032,17 +1037,6 @@ a:hover {
     }
 }
 
-/* A small, repeating accent cycle - each new sheet picks up the next color
-   automatically, with no manual color setting added to any article. These
-   six values are the site's original pink/yellow/green/blue/purple system,
-   unchanged - only the card's own surface moved from dark to light. */
-.sheet-card:nth-child(6n+1) { --accent: #e67b85; }
-.sheet-card:nth-child(6n+2) { --accent: #e0e77b; }
-.sheet-card:nth-child(6n+3) { --accent: #58e0c1; }
-.sheet-card:nth-child(6n+4) { --accent: #7fc4f2; }
-.sheet-card:nth-child(6n+5) { --accent: #a6e22e; }
-.sheet-card:nth-child(6n+6) { --accent: #ae81ff; }
-
 .sheet-card-body {
     display: block;
     min-width: 0;
@@ -1051,15 +1045,15 @@ a:hover {
 
 .sheet-card-title {
     margin: 0 0 4px;
-    color: var(--ink);
-    font-weight: 500;
+    color: #f2f4f5;
+    font-weight: 600;
     font-size: 1rem;
     line-height: 1.3;
 }
 
 .sheet-card-description {
     margin: 0;
-    color: var(--ink-muted);
+    color: #a9b1b4;
     font-size: 0.85rem;
     line-height: 1.4;
 }
@@ -1071,7 +1065,7 @@ a:hover {
 }
 
 .sheet-card-tag {
-    color: var(--chroma-green);
+    color: var(--term-green);
     font-style: italic;
 }
 
